@@ -1,0 +1,26 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>React Tutorial</title>
+
+    <script src="bower_components/react/react.js"></script>
+    <script src="bower_components/react/react-dom.js"></script>
+    <script src="bower_components/babel-browser/browser.js"></script>
+
+    <!--for AJAX-->
+    <script src="https://wzrd.in/standalone/superagent@latest"></script>
+    <script src="jsx/apiclient.js"></script>
+
+    <script type="text/babel" src="jsx/main.jsx"></script>
+</head>
+<body>
+
+<h2>すぷりんぐぶーと！</h2>
+<span th:text="${voice}"></span>（・８・）!
+
+<div id="content"></div>
+
+</body>
+</html>
