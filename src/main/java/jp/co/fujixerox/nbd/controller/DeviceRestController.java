@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,9 @@ public class DeviceRestController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity register(
-            @RequestBody CreateDeviceForm deviceForm,
+            @RequestBody
+            @Valid
+                    CreateDeviceForm deviceForm,
             UriComponentsBuilder uriBuilder){
 
         try {

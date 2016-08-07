@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,10 @@ public class UserRestController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity register(
-            @RequestBody CreateUserForm userForm, UriComponentsBuilder uriBuilder){
+            @RequestBody
+            @Valid
+                    CreateUserForm userForm,
+            UriComponentsBuilder uriBuilder){
 
         try {
             userService.register(userForm.getId(), userForm.getName(), userForm.getAddress(), userForm.getPassword());

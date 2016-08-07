@@ -2,23 +2,25 @@ package jp.co.fujixerox.nbd.controller.form;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotBlank;
 
-/**
- * Created by TATSUYA-PC4 on 2016/07/16.
- */
 public class CreateUserForm {
+    @NotBlank
     @Getter
     @Setter
     private String id;
 
+    @NotBlank
     @Getter
     @Setter
     private String name;
 
+    @NotBlank
     @Getter
     @Setter
     private String password;
 
+    @NotBlank
     @Getter
     @Setter
     private String address;

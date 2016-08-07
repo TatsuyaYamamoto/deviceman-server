@@ -38,9 +38,9 @@ public class DeviceService {
     LogRepository logRepo;
 
     public List<Device> getAll(int offset, int limit){
-        logger.traceEntry();
-
-        return logger.traceExit(deviceRepo.findAll());
+        logger.entry(offset, limit);
+        List<Device> devices = deviceRepo.findAll();
+        return logger.traceExit(devices);
     }
 
     public Device getById(String deviceId){
