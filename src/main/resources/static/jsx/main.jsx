@@ -27,6 +27,13 @@ var Index = React.createClass({
         );
     }
 });
+var NotFound = React.createClass({
+    render: function () {
+        return (
+            <h2>Not found(・8・) oh...</h2>
+        );
+    }
+});
 
 ReactDOM.render((
     <Router history={hashHistory}>
@@ -37,5 +44,6 @@ ReactDOM.render((
             <Route path="/checkout" component={Checkout} />
             <Route path="/log" component={Log} />
         </Route>
+        <Route path='*' component={NotFound} />
     </Router>
 ), document.getElementById('content'));
