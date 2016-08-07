@@ -13,6 +13,8 @@ import Device from './devicebox.jsx'
 import Checkout from './checkoutbox.jsx'
 import Log from './logbox.jsx'
 
+require('bootstrap/dist/css/bootstrap.min.css');
+
 var Index = React.createClass({
     render: function() {
         return (
