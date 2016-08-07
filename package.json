@@ -1,0 +1,42 @@
+{
+  "name": "deviceman-server",
+  "version": "1.0.0",
+  "description": "device management tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TatsuyaYamamoto/deviceman-server.git"
+  },
+  "keywords": [
+    "device",
+    "torica"
+  ],
+  "author": "fx30328",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TatsuyaYamamoto/deviceman-server/issues"
+  },
+  "homepage": "https://github.com/TatsuyaYamamoto/deviceman-server#readme",
+  "dependencies": {
+    "react": "^15.3.0",
+    "react-bootstrap": "^0.30.2",
+    "react-dom": "^15.3.0",
+    "react-router": "^2.6.1",
+    "superagent": "^2.1.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "css-loader": "^0.23.1",
+    "gulp": "^3.9.1",
+    "gulp-webpack": "^1.5.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1"
+  }
+}
