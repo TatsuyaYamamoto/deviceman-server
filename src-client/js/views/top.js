@@ -58,7 +58,7 @@ class Top extends React.Component {
         return (
             <div>
                 <div style={{textAlign: "center"}}>
-                    <img src={"/img/torica.png"} />
+                    <img src={"/torica/img/torica.png"} />
                     <h1>Torica</h1>
                     Toriaezu tanmatsu no Rireki wo nokoshite okouCa.
 

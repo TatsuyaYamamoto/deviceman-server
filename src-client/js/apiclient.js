@@ -5,7 +5,7 @@ module.exports = {
     getCheckout: function(){
         return new Promise((resolve, reject) => {
             request
-                .get("/api/checkout")
+                .get("/torica/api/checkout")
                 .end(function(err, res) {
                     if (err) {
                         reject(err);
@@ -18,7 +18,7 @@ module.exports = {
     getCheckoutLog: function(){
         return new Promise((resolve, reject) => {
             request
-                .get("/api/checkout/log")
+                .get("/torica/api/checkout/log")
                 .end(function(err, res) {
                     if (err) {
                         reject(err);
@@ -31,7 +31,7 @@ module.exports = {
     getUsers: function(callback){
         return new Promise((resolve, reject) => {
                 request
-                    .get("/api/users/")
+                    .get("/torica/api/users/")
                     .end(function(err, res) {
                         if (err) {
                             reject(err);
@@ -45,7 +45,7 @@ module.exports = {
         return new Promise(
             (resolve, reject) => {
                 request
-                    .post("/api/users/")
+                    .post("/torica/api/users/")
                     .send({
                         id: id,
                         name: name,
@@ -68,7 +68,7 @@ module.exports = {
         return new Promise(
             (resolve, reject) => {
                 request
-                    .get("/api/devices/")
+                    .get("/torica/api/devices/")
                     .end(
                         (err, res) => {
                             if (err) {
@@ -82,7 +82,7 @@ module.exports = {
     },
     registerDevice: function(id, name, callback){
         request
-            .post("/api/devices/")
+            .post("/torica/api/devices/")
             .send({
                 id: id,
                 name: name

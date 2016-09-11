@@ -4,6 +4,8 @@ import jp.co.fujixerox.nbd.controller.HttpLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -20,9 +22,14 @@ import javax.sql.DataSource;
 @SpringBootApplication
 //@EntityScan(basePackages = "jp.co.fujixerox.nbd.domain.model")
 // equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan
-public class Application {
+public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
     }
 
     @Bean
