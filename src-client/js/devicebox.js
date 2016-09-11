@@ -1,6 +1,6 @@
 import React from 'react';
 import FieldGroup from './components/field-group.jsx'
-import Apiclient from '../js/apiclient.js';
+import Apiclient from './apiclient.js';
 
 import {
     Table,
@@ -16,7 +16,9 @@ module.exports = React.createClass({
     /* event handling */
     getDevices: function(){
         Apiclient.getDevices(function(res){
-            this.setState({data: res.body.devices});
+            if (this.isMounted()){
+                this.setState({data: res.body.devices});
+            }
         }.bind(this));
     },
     registerDevice: function (id, name) {

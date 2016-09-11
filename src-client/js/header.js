@@ -12,8 +12,8 @@ import {
     MenuItem
 } from 'react-bootstrap';
 
-module.exports = React.createClass({
-    render: function() {
+export default class Header extends React.Component{
+    render() {
         return (
             <Navbar>
                 <Navbar.Header>
@@ -30,4 +30,4 @@ module.exports = React.createClass({
             </Navbar>
         );
     }
-});
+};

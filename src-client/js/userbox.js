@@ -1,5 +1,5 @@
 import React from 'react';
-import Apiclient from '../js/apiclient.js';
+import Apiclient from './apiclient.js';
 import FieldGroup from './components/field-group.jsx'
 import {
     Table,
@@ -17,7 +17,9 @@ module.exports = React.createClass({
     /* event handling */
     getUsers: function(){
         Apiclient.getUsers(function(res){
-            this.setState({data: res.body.users});
+            if (this.isMounted()){
+                this.setState({data: res.body.users});
+            }
         }.bind(this));
     },
     registerUser: function (id, name, address, password) {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Table } from 'react-bootstrap';
 
-import Apiclient from '../js/apiclient.js';
+import Apiclient from './apiclient.js';
 
 module.exports =  React.createClass({
     getInitialState: function() {

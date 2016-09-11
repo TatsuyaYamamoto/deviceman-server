@@ -2,20 +2,23 @@ import React from 'react';
 
 import { Table } from 'react-bootstrap';
 
-import Apiclient from '../js/apiclient.js';
+import Apiclient from './apiclient.js';
 
 
-module.exports = React.createClass({
-    getInitialState: function() {
-        return {data: []};
-    },
-    componentDidMount: function() {
+export default class LogBox extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: []
+        };
+    }
+    componentDidMount() {
         var self = this;
         Apiclient.getCheckoutLog(function(res){
             self.setState({data: res.body.logs});
         })
-    },
-    render: function() {
+    }
+    render() {
         return (
             <div className="checkoutLog">
                 <h1>Logs</h1>
@@ -26,10 +29,10 @@ module.exports = React.createClass({
             </div>
         );
     }
-});
+};
 
-var LogTableHeader = React.createClass({
-    render: function() {
+class LogTableHeader extends React.Component{
+    render() {
         return (
             <thead className="LogTableHeader">
             <tr>
@@ -41,11 +44,10 @@ var LogTableHeader = React.createClass({
             </thead>
         );
     }
-});
+}
 
-
-var LogTableBody = React.createClass({
-    render: function() {
+class LogTableBody extends React.Component{
+    render() {
         var commentNodes = this.props.data.map(
             (log)=>{
                 return (
@@ -65,10 +67,10 @@ var LogTableBody = React.createClass({
             </tbody>
         );
     }
-});
+}
 
-var LogTableItem = React.createClass({
-    render: function() {
+class LogTableItem extends React.Component{
+    render() {
         var userId          = this.props.userId;
         var deviceName      = this.props.deviceName;
         var checkOutTime    = new Date(this.props.checkOutTime).toDateString();
@@ -83,4 +85,4 @@ var LogTableItem = React.createClass({
             </tr>
         );
     }
-});
+}
