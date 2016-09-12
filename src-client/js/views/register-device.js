@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
 
@@ -12,7 +11,7 @@ import Header from '../components/header.js';
 
 import ApiClient from '../apiclient.js';
 
-import request from 'superagent';
+import Dropzone from 'react-dropzone'
 
 const styles = {
     headline: {
@@ -57,6 +56,7 @@ class RegisterDevice extends React.Component {
         this.closeSuccessDialog = this.closeSuccessDialog.bind(this);
         this.onChangeForm = this.onChangeForm.bind(this);
         this.submit = this.submit.bind(this);
+        this.onDrop = this.onDrop.bind(this);
     }
 
     openDialog(title, description){
@@ -106,6 +106,19 @@ class RegisterDevice extends React.Component {
             });
     }
 
+    onDrop(files) {
+        ApiClient.uploadCsvDevices(files[0])
+            .then((obj) => {
+                this.openDialog("端末登録が成功しました。")
+            })
+            .catch((err) => {
+                switch (err.status){
+                    case 400:
+                        this.openDialog("不正なファイルです。");
+                        break;
+                }
+            });
+    }
     render() {
         return (
             <div>
@@ -136,6 +149,14 @@ class RegisterDevice extends React.Component {
                     primary={true}
                     style={styles.button} />
 
+                <Dropzone
+                    onDrop={this.onDrop}
+                    accept="text/csv,application/vnd.ms-excel" >
+                    <div>
+                        ファイルを指定またはドラッグ&ドロップ
+                        <p>形式: csv</p>
+                    </div>
+                </Dropzone>
 
                 <Dialog
                     title={this.state.dialog.title}

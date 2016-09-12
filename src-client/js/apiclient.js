@@ -100,5 +100,23 @@ module.exports = {
                     );
             }
         );
+    },
+    uploadCsvDevices: function(formData){
+        return new Promise(
+            (resolve, reject) => {
+                request
+                    .post("/torica/api/devices/upload.csv")
+                    .attach('csv_file', formData)
+                    .end(
+                        (err, res) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        }
+                    );
+            }
+        );
     }
 };
