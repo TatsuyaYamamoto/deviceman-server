@@ -41,15 +41,11 @@ class RegisterDevice extends React.Component {
             isOpenSuccessDialog: false,
             formValue: {
                 id: "",
-                name: "",
-                address: "",
-                password: ""
+                name: ""
             },
             errorText: {
                 id: "",
-                name: "",
-                address: "",
-                password: ""
+                name: ""
             },
             dialog: {
                 title: "",
@@ -86,24 +82,15 @@ class RegisterDevice extends React.Component {
             case FORM_INPUT_ID.USER_NAME:
                 formValue.name = e.target.value;
                 break;
-            case FORM_INPUT_ID.ADDRESS:
-                formValue.address = e.target.value;
-                break;
-            case FORM_INPUT_ID.PASSWORD:
-                formValue.password = e.target.value;
-                break;
         }
         this.setState({formValue: formValue});
     }
 
     submit(){
-        const userId = this.refs.userId.getValue();
-        const userName = this.state.formValue.name;
-        const address = this.state.formValue.address;
-        const password = this.state.formValue.password;
+        const deviceId = this.state.formValue.id;
+        const deviceName = this.state.formValue.name;
 
-
-        ApiClient.registerUser(userId, userName, address, password)
+        ApiClient.registerDevice(deviceId, deviceName)
             .then((obj) => {
                 this.openDialog("端末登録が成功しました。")
             })

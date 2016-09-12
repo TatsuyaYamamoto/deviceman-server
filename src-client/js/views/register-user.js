@@ -97,7 +97,7 @@ class RegisterUser extends React.Component {
     }
 
     submit(){
-        const userId = this.refs.userId.getValue();
+        const userId = this.state.formValue.id;
         const userName = this.state.formValue.name;
         const address = this.state.formValue.address;
         const password = this.state.formValue.password;
