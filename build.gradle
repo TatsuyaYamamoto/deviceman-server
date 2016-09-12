@@ -37,6 +37,9 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
 
+    // csv parser
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.4'
+
     // create deployable war
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 

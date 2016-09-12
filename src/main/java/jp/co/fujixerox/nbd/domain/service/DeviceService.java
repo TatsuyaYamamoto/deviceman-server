@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -68,6 +69,27 @@ public class DeviceService {
         deviceRepo.save(newDevice);
 
         logger.traceExit("success to save a new device, {}", newDevice);
+    }
+
+    @Transactional(readOnly = false)
+    public void bulkUpdate(List<Device> devices) throws ApplicationException {
+        logger.entry(devices);
+
+        if(devices.size() == 0){
+            logger.trace("user list has no users.");
+            throw new ApplicationException(HttpError.EMPTY_CSV);
+        }
+
+        List<Device> insertTarget = new ArrayList();
+
+        for(Device device: devices){
+            if(!deviceRepo.exists(device.getId())){
+                insertTarget.add(device);
+            }
+        }
+        deviceRepo.save(insertTarget);
+
+        logger.traceExit("success to bulk update");
     }
 
     @Transactional(readOnly = false)

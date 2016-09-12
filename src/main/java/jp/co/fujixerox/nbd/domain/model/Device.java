@@ -19,7 +19,7 @@ public class Device {
     /**
      * 端末名
      */
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "NAME", nullable = false)
     @Getter
     @Setter
     private String name;

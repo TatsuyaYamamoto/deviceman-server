@@ -1,28 +1,31 @@
 package jp.co.fujixerox.nbd.controller;
 
 import jp.co.fujixerox.nbd.ApplicationException;
-import jp.co.fujixerox.nbd.HttpError;
 import jp.co.fujixerox.nbd.controller.form.CreateDeviceForm;
 import jp.co.fujixerox.nbd.domain.model.Device;
-import jp.co.fujixerox.nbd.domain.model.User;
 import jp.co.fujixerox.nbd.domain.service.DeviceService;
-import jp.co.fujixerox.nbd.domain.service.UserService;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static jp.co.fujixerox.nbd.HttpError.ENTITY_NOT_FOUND;
-import static jp.co.fujixerox.nbd.HttpError.ILLEGAL_DATE;
 
 @RestController
 @RequestMapping("/api/devices")
@@ -31,6 +34,10 @@ public class DeviceRestController {
     @Autowired
     DeviceService deviceService;
 
+    /**
+     * 端末情報をすべて取得する
+     * @return
+     */
     @RequestMapping(
             value = "/",
             method = RequestMethod.GET,
@@ -44,6 +51,11 @@ public class DeviceRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    /**
+     * IDに対応した端末情報を取得する
+     * @param id
+     * @return
+     */
     @RequestMapping(
             value = "/{id}",
             method = RequestMethod.GET,
@@ -58,6 +70,13 @@ public class DeviceRestController {
         return new ResponseEntity<>(device, HttpStatus.OK);
     }
 
+    /**
+     * 端末を登録する
+     *
+     * @param deviceForm
+     * @param uriBuilder
+     * @return
+     */
     @RequestMapping(
             value = "/",
             method = RequestMethod.POST,
@@ -82,6 +101,44 @@ public class DeviceRestController {
         headers.setLocation(location);
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(
+            value = "upload.csv",
+            method = RequestMethod.POST,
+            consumes = "multipart/form-data")
+    public ResponseEntity putWithCsvFile(@RequestParam("csv_file") MultipartFile multipartFile){
+
+        if(multipartFile == null || multipartFile.isEmpty()){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        List<Device> devices = new ArrayList();
+        try {
+            byte[] bytes = multipartFile.getBytes();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));
+
+
+            CSVParser parse = CSVFormat.DEFAULT.withHeader().parse(bufferedReader);
+            for (CSVRecord line : parse) {
+                Device device = new Device();
+                device.setId(line.get("id"));
+                device.setName(line.get("name"));
+                device.setCreated(System.currentTimeMillis());
+
+                devices.add(device);
+            }
+        } catch (IOException e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            deviceService.bulkUpdate(devices);
+        } catch (ApplicationException e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 

@@ -7,7 +7,7 @@ public enum HttpError {
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "入力されたIDは存在しません。ID={0}"),
     ENTITY_CONFLICT(HttpStatus.CONFLICT, "入力されたIDは既に存在しています。ID={0}"),
 
-
+    EMPTY_CSV(HttpStatus.BAD_REQUEST, "ユーザーリストが0件のためアップデート出来ません。"),
 
     ILLEGAL_DATE(HttpStatus.BAD_REQUEST, "入力された日付が不正です。ID={0}"),
 
