@@ -64,7 +64,7 @@ module.exports = {
             }
         );
     },
-    getDevices: function(callback){
+    getDevices: function(){
         return new Promise(
             (resolve, reject) => {
                 request
@@ -80,18 +80,25 @@ module.exports = {
 
             })
     },
-    registerDevice: function(id, name, callback){
-        request
-            .post("/torica/api/devices/")
-            .send({
-                id: id,
-                name: name
-            })
-            .end(function(err, res) {
-                if (err) {
-                    throw err;
-                }
-                callback(res);
-            })
+    registerDevice: function(id, name){
+        return new Promise(
+            (resolve, reject) => {
+                request
+                    .post("/torica/api/devices/")
+                    .send({
+                        id: id,
+                        name: name
+                    })
+                    .end(
+                        (err, res) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve(res.body);
+                            }
+                        }
+                    );
+            }
+        );
     }
 };
