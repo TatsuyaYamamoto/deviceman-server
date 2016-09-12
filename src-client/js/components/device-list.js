@@ -1,6 +1,10 @@
 import React from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+
+import dateFormat from 'dateformat';
+
 import ApiClient from '../apiclient.js';
+import Constant from '../constants.js';
 
 
 export default class DeviceList extends React.Component {
@@ -38,7 +42,7 @@ export default class DeviceList extends React.Component {
                             <TableRow key={device.id}>
                                 <TableRowColumn>{device.id}</TableRowColumn>
                                 <TableRowColumn>{device.name}</TableRowColumn>
-                                <TableRowColumn>{device.created}</TableRowColumn>
+                                <TableRowColumn>{dateFormat(device.created, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
                                 <TableRowColumn>
                                     <a href={qrURL}>
                                         <img src={qrURL}></img>
