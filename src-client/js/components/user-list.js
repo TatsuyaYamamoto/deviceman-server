@@ -11,7 +11,7 @@ export default class UserList extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
         ApiClient.getUsers()
             .then((body) => {
                 this.setState({users: body.users})

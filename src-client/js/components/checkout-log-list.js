@@ -14,7 +14,7 @@ export default class CheckoutLogList extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
         ApiClient.getCheckoutLog()
             .then((body) => {
                 this.setState({logs: body.logs})

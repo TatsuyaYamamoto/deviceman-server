@@ -15,7 +15,7 @@ export default class DeviceList extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
         ApiClient.getDevices()
             .then((body) => {
                 this.setState({devices: body.devices})

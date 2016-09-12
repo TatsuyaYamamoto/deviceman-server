@@ -15,7 +15,7 @@ export default class CheckoutList extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
         ApiClient.getCheckout()
             .then((body) => {
                 this.setState({checkouts: body.checkouts})
