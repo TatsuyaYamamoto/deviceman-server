@@ -29,6 +29,7 @@ export default class CheckoutList extends React.Component {
             <Table>
                 <TableHeader displaySelectAll={false}>
                 <TableRow>
+                    <TableHeaderColumn>借出ID</TableHeaderColumn>
                     <TableHeaderColumn>借出ユーザー名</TableHeaderColumn>
                     <TableHeaderColumn>端末名</TableHeaderColumn>
                     <TableHeaderColumn>借出日</TableHeaderColumn>
@@ -39,6 +40,7 @@ export default class CheckoutList extends React.Component {
                     {this.state.checkouts.map((checkout)=>{
                         return (
                             <TableRow key={checkout.id}>
+                                <TableRowColumn>{checkout.id}</TableRowColumn>
                                 <TableRowColumn>{checkout.user.name}</TableRowColumn>
                                 <TableRowColumn>{checkout.device.name}</TableRowColumn>
                                 <TableRowColumn>{dateFormat(checkout.checkOutTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>

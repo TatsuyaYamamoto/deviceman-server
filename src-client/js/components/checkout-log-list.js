@@ -28,6 +28,7 @@ export default class CheckoutLogList extends React.Component {
             <Table>
                 <TableHeader displaySelectAll={false}>
                 <TableRow>
+                    <TableHeaderColumn>借出ID</TableHeaderColumn>
                     <TableHeaderColumn>借出ユーザー名</TableHeaderColumn>
                     <TableHeaderColumn>端末名</TableHeaderColumn>
                     <TableHeaderColumn>借出日</TableHeaderColumn>
@@ -38,6 +39,7 @@ export default class CheckoutLogList extends React.Component {
                     {this.state.logs.map((log)=>{
                         return (
                             <TableRow key={log.id}>
+                                <TableRowColumn>{log.id}</TableRowColumn>
                                 <TableRowColumn>{log.user.name}</TableRowColumn>
                                 <TableRowColumn>{log.device.name}</TableRowColumn>
                                 <TableRowColumn>{dateFormat(log.checkOutTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
