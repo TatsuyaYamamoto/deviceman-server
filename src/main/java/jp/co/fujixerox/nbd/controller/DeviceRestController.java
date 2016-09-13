@@ -103,6 +103,12 @@ public class DeviceRestController {
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
+    /**
+     * CSVファイルを読み込んで端末情報を更新する
+     *
+     * @param multipartFile
+     * @return
+     */
     @RequestMapping(
             value = "upload.csv",
             method = RequestMethod.POST,
@@ -125,6 +131,7 @@ public class DeviceRestController {
                 device.setId(line.get("id"));
                 device.setName(line.get("name"));
                 device.setCreated(System.currentTimeMillis());
+                device.setDisabled(false);
 
                 devices.add(device);
             }

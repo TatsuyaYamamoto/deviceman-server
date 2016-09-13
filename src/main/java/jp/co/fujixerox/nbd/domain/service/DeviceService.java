@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,6 +49,14 @@ public class DeviceService {
         return logger.traceExit(device);
     }
 
+    /**
+     * 端末を登録する
+     * IDは小文字に変換される
+     *
+     * @param id
+     * @param name
+     * @throws ApplicationException
+     */
     @Transactional(readOnly = false)
     public void register(
             String id,
@@ -62,7 +69,7 @@ public class DeviceService {
         }
 
         Device newDevice = new Device();
-        newDevice.setId(id);
+        newDevice.setId(id.toLowerCase());
         newDevice.setName(name);
         newDevice.setCreated(System.currentTimeMillis());
         newDevice.setDisabled(false);
@@ -72,6 +79,13 @@ public class DeviceService {
         logger.traceExit("success to save a new device, {}", newDevice);
     }
 
+    /**
+     * 端末リストで一括更新する
+     * IDはlower caseに変換される
+     *
+     * @param devices
+     * @throws ApplicationException
+     */
     @Transactional(readOnly = false)
     public void bulkUpdate(List<Device> devices) throws ApplicationException {
         logger.entry(devices);
@@ -81,14 +95,16 @@ public class DeviceService {
             throw new ApplicationException(HttpError.EMPTY_CSV);
         }
 
-        List<Device> insertTarget = new ArrayList();
-
         for(Device device: devices){
-            if(!deviceRepo.exists(device.getId())){
-                insertTarget.add(device);
+            if(deviceRepo.exists(device.getId())) {
+                // 既存の場合名前の更新
+                Device existedDevice = deviceRepo.findOne(device.getId());
+                existedDevice.setName(device.getName());
+            } else{
+                device.setId(device.getId().toLowerCase());
+                deviceRepo.save(device);
             }
         }
-        deviceRepo.save(insertTarget);
 
         logger.traceExit("success to bulk update");
     }
