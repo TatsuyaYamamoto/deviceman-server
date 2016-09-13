@@ -122,8 +122,6 @@ class RegisterDevice extends React.Component {
     render() {
         return (
             <div>
-                <Header/>
-
                 <h2 style={styles.headline}>端末登録</h2>
 
                 <div>

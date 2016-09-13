@@ -114,8 +114,6 @@ class RegisterUser extends React.Component {
     render() {
         return (
             <div>
-                <Header/>
-
                 <h2 style={styles.headline}>ユーザー登録</h2>
 
                 <div>
