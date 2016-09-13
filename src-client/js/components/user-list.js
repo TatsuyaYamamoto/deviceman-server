@@ -23,7 +23,7 @@ export default class UserList extends React.Component {
     render(){
         return(
             <Table>
-                <TableHeader>
+                <TableHeader displaySelectAll={false}>
                 <TableRow>
                     <TableHeaderColumn>ユーザーID</TableHeaderColumn>
                     <TableHeaderColumn>ユーザー名</TableHeaderColumn>
@@ -31,7 +31,7 @@ export default class UserList extends React.Component {
                     <TableHeaderColumn>QRコード</TableHeaderColumn>
                 </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody displayRowCheckbox={false}>
                     {this.state.users.map((user)=>{
                         var qrURL = `http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=${user.id}`;
                         return (

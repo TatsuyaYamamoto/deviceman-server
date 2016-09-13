@@ -26,7 +26,7 @@ export default class CheckoutLogList extends React.Component {
     render(){
         return(
             <Table>
-                <TableHeader>
+                <TableHeader displaySelectAll={false}>
                 <TableRow>
                     <TableHeaderColumn>借出ユーザー名</TableHeaderColumn>
                     <TableHeaderColumn>端末名</TableHeaderColumn>
@@ -34,7 +34,7 @@ export default class CheckoutLogList extends React.Component {
                     <TableHeaderColumn>返却日</TableHeaderColumn>
                 </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody displayRowCheckbox={false}>
                     {this.state.logs.map((log)=>{
                         return (
                             <TableRow key={log.id}>

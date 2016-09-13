@@ -21,9 +21,12 @@ class RegisteredList extends React.Component {
     }
 
     handleChangeTab(value){
-        this.setState({
-            value: value,
-        });
+        // tabs以下のイベントでも発火するので、値確認の上stateを更新する
+        if (["a", "b", "c", "d"].indexOf(value) >= 0){
+            this.setState({
+                value: value,
+            });
+        }
     };
 
     openDialog(title, description){

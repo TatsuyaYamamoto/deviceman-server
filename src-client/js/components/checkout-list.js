@@ -27,7 +27,7 @@ export default class CheckoutList extends React.Component {
     render(){
         return(
             <Table>
-                <TableHeader>
+                <TableHeader displaySelectAll={false}>
                 <TableRow>
                     <TableHeaderColumn>借出ユーザー名</TableHeaderColumn>
                     <TableHeaderColumn>端末名</TableHeaderColumn>
@@ -35,7 +35,7 @@ export default class CheckoutList extends React.Component {
                     <TableHeaderColumn>返却予定日</TableHeaderColumn>
                 </TableRow>
                 </TableHeader>
-                <TableBody>
+                <TableBody displayRowCheckbox={false}>
                     {this.state.checkouts.map((checkout)=>{
                         return (
                             <TableRow key={checkout.id}>
