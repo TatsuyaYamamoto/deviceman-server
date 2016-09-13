@@ -30,7 +30,6 @@ const FORM_INPUT_ID = {
     USER_ID: "userId",
     USER_NAME: "userName",
     ADDRESS: "address",
-    PASSWORD: "password"
 };
 
 class RegisterUser extends React.Component {
@@ -43,13 +42,11 @@ class RegisterUser extends React.Component {
                 id: "",
                 name: "",
                 address: "",
-                password: ""
             },
             errorText: {
                 id: "",
                 name: "",
                 address: "",
-                password: ""
             },
             dialog: {
                 title: "",
@@ -89,9 +86,6 @@ class RegisterUser extends React.Component {
             case FORM_INPUT_ID.ADDRESS:
                 formValue.address = e.target.value;
                 break;
-            case FORM_INPUT_ID.PASSWORD:
-                formValue.password = e.target.value;
-                break;
         }
         this.setState({formValue: formValue});
     }
@@ -100,10 +94,8 @@ class RegisterUser extends React.Component {
         const userId = this.state.formValue.id;
         const userName = this.state.formValue.name;
         const address = this.state.formValue.address;
-        const password = this.state.formValue.password;
 
-
-        ApiClient.registerUser(userId, userName, address, password)
+        ApiClient.registerUser(userId, userName, address)
             .then((obj) => {
                 this.openDialog("ユーザー登録が成功しました。")
             })
@@ -146,13 +138,6 @@ class RegisterUser extends React.Component {
                         floatingLabelText="アドレス"
                         hintText="通知用のアドレスを入力して下さい"
                         errorText={this.state.errorText.address}
-                        onChange={this.onChangeForm}
-                    /><br />
-                    <TextField
-                        id={FORM_INPUT_ID.PASSWORD}
-                        type="password"
-                        floatingLabelText="パスワード"
-                        errorText={this.state.errorText.password}
                         onChange={this.onChangeForm}
                     />
                 </div>
