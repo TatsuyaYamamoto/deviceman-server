@@ -65,6 +65,7 @@ public class DeviceService {
         newDevice.setId(id);
         newDevice.setName(name);
         newDevice.setCreated(System.currentTimeMillis());
+        newDevice.setDisabled(false);
 
         deviceRepo.save(newDevice);
 
@@ -174,7 +175,6 @@ public class DeviceService {
             String userId,
             String deviceId) throws ApplicationException {
         logger.entry(userId, deviceId);
-
 
         // 入力値確認
         if(!userRepo.exists(userId)){

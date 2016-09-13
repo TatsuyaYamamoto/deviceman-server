@@ -31,4 +31,12 @@ public class Device {
     @Getter
     @Setter
     private Long created;
+
+    /**
+     * 借り出し無効化フラグ
+     */
+    @Column(name = "DISABLED", nullable = false)
+    @Getter
+    @Setter
+    private Boolean disabled;
 }
