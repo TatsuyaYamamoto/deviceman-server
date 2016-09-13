@@ -7,6 +7,10 @@ import javax.persistence.*;
 
 @Entity
 public class CheckOut {
+
+    /**
+     * 借り出しID
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

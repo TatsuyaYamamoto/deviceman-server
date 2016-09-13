@@ -18,10 +18,5 @@ public class CreateUserForm {
     @NotBlank
     @Getter
     @Setter
-    private String password;
-
-    @NotBlank
-    @Getter
-    @Setter
     private String address;
 }

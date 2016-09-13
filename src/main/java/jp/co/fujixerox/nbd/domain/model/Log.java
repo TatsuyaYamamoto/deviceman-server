@@ -7,8 +7,11 @@ import javax.persistence.*;
 
 @Entity
 public class Log {
+
+    /**
+     * 借り出しID
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     @Getter
     @Setter

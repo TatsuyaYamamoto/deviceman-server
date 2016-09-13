@@ -191,6 +191,7 @@ public class DeviceService {
         }
 
         Log log = new Log();
+        log.setId(co.getId());
         log.setUserId(co.getUserId());
         log.setDeviceId(co.getDeviceId());
         log.setCheckOutTime(co.getCheckOutTime());
@@ -200,6 +201,5 @@ public class DeviceService {
         logRepo.save(log);
 
         logger.traceExit("success to return device , {}", co);
-        logger.traceExit("success to logging, {}", log);
     }
 }

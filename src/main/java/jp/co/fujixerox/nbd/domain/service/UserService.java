@@ -41,9 +41,8 @@ public class UserService {
     public void register(
             String id,
             String name,
-            String address,
-            String rawPassword) throws ApplicationException {
-        logger.entry(id, name, address, rawPassword);
+            String address) throws ApplicationException {
+        logger.entry(id, name, address);
 
         if(repository.exists(id)){
             logger.trace("cannot register as a result of to conflict (ID: {})", id);
@@ -54,7 +53,6 @@ public class UserService {
         newUser.setId(id);
         newUser.setName(name);
         newUser.setAddress(address);
-        newUser.setPassword(encryptPassword(rawPassword));
         newUser.setCreated(System.currentTimeMillis());
 
         repository.save(newUser);

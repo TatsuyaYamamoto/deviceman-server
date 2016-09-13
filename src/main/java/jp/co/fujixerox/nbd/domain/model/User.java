@@ -1,13 +1,11 @@
 package jp.co.fujixerox.nbd.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlElement;
 
 @Entity
 public class User {
@@ -29,14 +27,6 @@ public class User {
     @Getter
     @Setter
     private String name;
-
-    /**
-     * パスワード
-     */
-    @Column(name = "PASSWORD", nullable = false)
-    @Getter
-    @Setter
-    private String password;
 
     /**
      * 通知アドレス

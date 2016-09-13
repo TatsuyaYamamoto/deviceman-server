@@ -63,7 +63,7 @@ public class UserRestController {
             UriComponentsBuilder uriBuilder){
 
         try {
-            userService.register(userForm.getId(), userForm.getName(), userForm.getAddress(), userForm.getPassword());
+            userService.register(userForm.getId(), userForm.getName(), userForm.getAddress());
         } catch (ApplicationException e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
