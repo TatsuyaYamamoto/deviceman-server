@@ -1,3 +1,6 @@
+# secret file
+*.secret
+
 # bower
 bower_components/
 
