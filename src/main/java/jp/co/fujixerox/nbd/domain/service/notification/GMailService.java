@@ -8,7 +8,8 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import org.springframework.beans.factory.annotation.Value;
+import jp.co.fujixerox.nbd.SecretConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -23,15 +24,17 @@ import java.net.Proxy;
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GMailService {
+
+    @Autowired
+    private SecretConfig secretConfig;
+
     private static final String PROXY_HOST = "proxy.fujixerox.co.jp";
     private static final int PROXY_PORT = 8080;
 
     private static final String APPLICATION_NAME = "Torica Mail Serivce";
     private static final String AUTHENTICATED_USER = "me";
 
-    @Value("${refresh_token}")
-    private static String REFRESH_TOKEN;
-    private static final String CLIENT_SECRET_RESOURCE_NAME = "/torica_client.json.secret";
+    private static final String CLIENT_SECRET_RESOURCE_NAME = "/torica_gmail_client.json";
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport.Builder()
@@ -39,12 +42,12 @@ public class GMailService {
             .build();
 
     /**
-     * Build and return an authorized Gmail client service.
-     * @return an authorized Gmail client service
+     * GmailAPIを実行するサービスインスタンスを取得する
+     *
+     * @return
      * @throws IOException
      */
-    public static Gmail getGmailService() throws IOException {
-
+    public Gmail getGmailService() throws IOException {
 
         GoogleClientSecrets clientSecrets;
 
@@ -57,7 +60,7 @@ public class GMailService {
                 .setTransport(HTTP_TRANSPORT)
                 .setClientSecrets(clientSecrets)
                 .build()
-                .setRefreshToken(REFRESH_TOKEN);
+                .setRefreshToken(secretConfig.REFRESH_TOKEN);
 
         return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)

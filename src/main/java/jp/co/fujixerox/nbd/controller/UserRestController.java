@@ -9,6 +9,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,7 +26,10 @@ import java.util.Map;
 public class UserRestController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private JmsMessagingTemplate jmsMessagingTemplate;
 
     @RequestMapping(
             value = "/",
@@ -52,6 +58,14 @@ public class UserRestController {
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
+    /**
+     * ユーザーを新規作成する
+     * DBへの反映成功後、
+     *
+     * @param userForm
+     * @param uriBuilder
+     * @return
+     */
     @RequestMapping(
             value = "/",
             method = RequestMethod.POST,
@@ -62,12 +76,20 @@ public class UserRestController {
                     CreateUserForm userForm,
             UriComponentsBuilder uriBuilder){
 
+        /* execute */
         try {
             userService.register(userForm.getId(), userForm.getName(), userForm.getAddress());
         } catch (ApplicationException e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
 
+        /* messaging */
+        Message<String> message = MessageBuilder
+                .withPayload(userForm.getId())
+                .build();
+        jmsMessagingTemplate.send("new-user", message);
+
+        /* response */
         URI location = uriBuilder.path("api/users/{userId}")
                 .buildAndExpand(userForm.getId())
                 .toUri();
@@ -75,6 +97,6 @@ public class UserRestController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        return new ResponseEntity(headers, HttpStatus.ACCEPTED);
     }
 }

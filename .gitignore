@@ -1,5 +1,6 @@
 # secret file
-*.secret
+secret.properties
+torica_gmail_client.json
 
 # bower
 bower_components/

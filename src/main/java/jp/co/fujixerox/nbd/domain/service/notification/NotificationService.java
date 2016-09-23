@@ -59,6 +59,7 @@ public class NotificationService {
             String userName,
             String address)
             throws ApplicationException {
+        logger.entry(userId, userName, address);
 
         Map<String, String> bindResource = new HashMap();
         bindResource.put("receiver.name", userName);
@@ -71,7 +72,8 @@ public class NotificationService {
                     .bodyText(createMessage(TEMPLATE_FILE_PATH_NEW_USER_BODY, bindResource))
                     .build();
 
-            gMailService.send(message);
+            Message response = gMailService.send(message);
+            logger.traceExit("success to notificate to new user. {}", response);
         } catch (MessagingException | IOException e) {
             logger.catching(e);
             throw new ApplicationException(e);

@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-@PropertySource("classpath:token.properties.secret")
+@PropertySource(value = {"classpath:secret.properties"})
 //@EntityScan(basePackages = "jp.co.fujixerox.nbd.domain.model")
 // equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan
 public class Application extends SpringBootServletInitializer {
