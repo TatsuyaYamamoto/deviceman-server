@@ -9,6 +9,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -17,6 +20,8 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
+@Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class GMailService {
     private static final String PROXY_HOST = "proxy.fujixerox.co.jp";
     private static final int PROXY_PORT = 8080;

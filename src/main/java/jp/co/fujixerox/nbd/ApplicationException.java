@@ -16,6 +16,10 @@ public class ApplicationException extends Exception{
     @Setter
     private HttpError error;
 
+    public ApplicationException(Throwable cause){
+        super(cause);
+    }
+
     public ApplicationException(HttpError error){
         super();
         this.error = error;
