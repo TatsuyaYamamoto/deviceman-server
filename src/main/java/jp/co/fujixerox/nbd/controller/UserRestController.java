@@ -4,6 +4,7 @@ import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.controller.form.CreateUserForm;
 import jp.co.fujixerox.nbd.domain.model.User;
 import jp.co.fujixerox.nbd.domain.service.UserService;
+import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,6 +33,10 @@ public class UserRestController {
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
 
+    /**
+     * 登録済みユーザーリストをすべて取得する
+     * @return
+     */
     @RequestMapping(
             value = "/",
             method = RequestMethod.GET,
@@ -44,6 +50,11 @@ public class UserRestController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    /**
+     * ユーザID検索
+     * @param id
+     * @return
+     */
     @RequestMapping(
             value = "/{userId}",
             method = RequestMethod.GET,
@@ -71,10 +82,14 @@ public class UserRestController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity register(
-            @RequestBody
-            @Valid
-                    CreateUserForm userForm,
+            @RequestBody @Valid CreateUserForm userForm,
+            BindingResult bindingResult,
             UriComponentsBuilder uriBuilder){
+
+        /* bean validation */
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException(bindingResult.toString(), bindingResult);
+        }
 
         /* execute */
         try {

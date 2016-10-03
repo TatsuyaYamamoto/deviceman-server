@@ -6,12 +6,12 @@ import org.hibernate.validator.constraints.NotBlank;
 
 public class CreateDeviceForm {
 
-    @NotBlank
+    @NotBlank(message = "端末IDは必須項目です。")
     @Getter
     @Setter
     private String id;
 
-    @NotBlank
+    @NotBlank(message = "端末名は必須項目です。")
     @Getter
     @Setter
     private String name;

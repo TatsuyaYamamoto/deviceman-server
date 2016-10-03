@@ -4,6 +4,7 @@ import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.controller.form.CreateDeviceForm;
 import jp.co.fujixerox.nbd.domain.model.Device;
 import jp.co.fujixerox.nbd.domain.service.DeviceService;
+import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -82,10 +84,14 @@ public class DeviceRestController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity register(
-            @RequestBody
-            @Valid
-                    CreateDeviceForm deviceForm,
+            @RequestBody @Valid CreateDeviceForm deviceForm,
+            BindingResult bindingResult,
             UriComponentsBuilder uriBuilder){
+
+        /* bean validation */
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException(bindingResult.toString(), bindingResult);
+        }
 
         try {
             deviceService.register(deviceForm.getId(), deviceForm.getName());
