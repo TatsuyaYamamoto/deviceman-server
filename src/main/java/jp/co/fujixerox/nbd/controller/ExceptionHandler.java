@@ -1,5 +1,6 @@
 package jp.co.fujixerox.nbd.controller;
 
+import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,11 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
         @Getter
         @Setter
         private List<Map> errors;
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = ApplicationException.class)
+    public ResponseEntity handleApplicationRuntimeException(ApplicationException e){
+        return new ResponseEntity(e.getCause() , e.getError().getStatus());
     }
 
     /**
