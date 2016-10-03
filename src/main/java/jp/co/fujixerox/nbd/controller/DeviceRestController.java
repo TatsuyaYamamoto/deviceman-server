@@ -188,39 +188,6 @@ public class DeviceRestController {
     }
 
     /**
-     * 既に貸出中のcheckoutリソースを更新する
-     *
-     * @param userId
-     * @param deviceId
-     * @param dueReturnTime
-     * @return
-     */
-    @RequestMapping(
-            value = "/{deviceId}/checkout",
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity updateCheckout(
-            @PathVariable("deviceId") String deviceId,
-            @RequestParam(name = "user_id") String userId,
-            @RequestParam(name = "due_return_time") long dueReturnTime){
-
-        try {
-            deviceService.updateCheckout(userId, deviceId, dueReturnTime);
-        } catch (ApplicationException e) {
-            switch(e.getError()){
-                case ENTITY_NOT_FOUND:
-                    return new ResponseEntity(HttpStatus.NOT_FOUND);
-                case NOT_CHECKOUT:
-                    return new ResponseEntity(HttpStatus.NOT_FOUND);
-                case ILLEGAL_DATE:
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
-            }
-        }
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-
-    /**
      * 端末を返却する
      * @param userId
      * @param deviceId

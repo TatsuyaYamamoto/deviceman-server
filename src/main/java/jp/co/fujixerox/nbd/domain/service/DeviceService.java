@@ -150,43 +150,6 @@ public class DeviceService {
     }
 
     @Transactional(readOnly = false)
-    public void updateCheckout(
-            String userId,
-            String deviceId,
-            long dueReturnTime) throws ApplicationException {
-        logger.entry(userId, deviceId, dueReturnTime);
-
-        // 入力値確認
-        if(!userRepo.exists(userId)){
-            logger.trace("cannnot checkout not for storing a user (ID: {}))", userId);
-            throw new ApplicationException(HttpError.ENTITY_NOT_FOUND);
-        }
-        if(!deviceRepo.exists(deviceId)){
-            logger.trace("cannnot checkout not for storing a device (ID: {}))", deviceId);
-            throw new ApplicationException(HttpError.ENTITY_NOT_FOUND);
-        }
-
-        CheckOut co = checkOutRepo.findByUserIdAndDeviceId(userId, deviceId);
-
-        // 未貸出中の端末は更新できない
-        if (co == null) {
-            throw logger.throwing(new ApplicationException(HttpError.NOT_CHECKOUT));
-        }
-
-        // 更新前の返却予定日、現在時刻より古い返却予定日を指定させない
-        if(dueReturnTime < co.getDueReturnTime() || dueReturnTime < System.currentTimeMillis()){
-            logger.trace("cannnot checkout as a result of requested date later than now)", deviceId);
-            throw new ApplicationException(HttpError.ILLEGAL_DATE);
-        }
-
-
-        co.setDueReturnTime(dueReturnTime);
-        checkOutRepo.save(co);
-
-        logger.traceExit("success to update checkout, {}", co);
-    }
-
-    @Transactional(readOnly = false)
     public void returnDevice(
             String userId,
             String deviceId) throws ApplicationException {
