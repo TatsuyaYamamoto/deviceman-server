@@ -1,18 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
 import { connect } from 'react-redux';
-import { Link } from 'react-router'
 
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
-
-import Header from '../components/header.js';
+import Paper from 'material-ui/Paper';
 
 import ApiClient from '../apiclient.js';
-
-import request from 'superagent';
 
 const styles = {
     headline: {
@@ -23,6 +18,13 @@ const styles = {
     },
     button: {
         margin: 12,
+    },
+    paper: {
+        height: 100,
+        width: 100,
+        margin: 20,
+        textAlign: 'center',
+        display: 'inline-block',
     }
 };
 
@@ -114,37 +116,40 @@ class RegisterUser extends React.Component {
     render() {
         return (
             <div>
-                <h2 style={styles.headline}>ユーザー登録</h2>
+                <Paper style={styles.paper} zDepth={2}>
+                    <h2 style={styles.headline}>ユーザー登録</h2>
 
-                <div>
-                    <TextField
-                        id={FORM_INPUT_ID.USER_ID}
-                        floatingLabelText="ユーザーID"
-                        hintText="社員番号を入力して下さい"
-                        errorText={this.state.errorText.id}
-                        onChange={this.onChangeForm}
-                    /><br />
-                    <TextField
-                        id={FORM_INPUT_ID.USER_NAME}
-                        floatingLabelText="ユーザー名"
-                        hintText="名前を入力して下さい"
-                        errorText={this.state.errorText.name}
-                        onChange={this.onChangeForm}
-                    /><br />
-                    <TextField
-                        id={FORM_INPUT_ID.ADDRESS}
-                        floatingLabelText="アドレス"
-                        hintText="通知用のアドレスを入力して下さい"
-                        errorText={this.state.errorText.address}
-                        onChange={this.onChangeForm}
-                    />
-                </div>
-                <RaisedButton
-                    label="登録"
-                    onClick={this.submit}
-                    fullWidth={true}
-                    primary={true}
-                    style={styles.button} />
+                    <div>
+                        <TextField
+                            id={FORM_INPUT_ID.USER_ID}
+                            floatingLabelText="ユーザーID"
+                            hintText="社員番号を入力して下さい"
+                            errorText={this.state.errorText.id}
+                            onChange={this.onChangeForm}
+                        /><br />
+                        <TextField
+                            id={FORM_INPUT_ID.USER_NAME}
+                            floatingLabelText="ユーザー名"
+                            hintText="名前を入力して下さい"
+                            errorText={this.state.errorText.name}
+                            onChange={this.onChangeForm}
+                        /><br />
+                        <TextField
+                            id={FORM_INPUT_ID.ADDRESS}
+                            floatingLabelText="アドレス"
+                            hintText="通知用のアドレスを入力して下さい"
+                            errorText={this.state.errorText.address}
+                            onChange={this.onChangeForm}
+                        />
+                    </div>
+                    <RaisedButton
+                        label="登録"
+                        onClick={this.submit}
+                        fullWidth={true}
+                        primary={true}
+                        style={styles.button} />
+                </Paper>
+
 
 
                 <Dialog

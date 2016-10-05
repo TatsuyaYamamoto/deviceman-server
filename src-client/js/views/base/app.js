@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import Theme from './theme.js';
+import Theme from '../theme.js';
 
-class BaseApp extends React.Component {
+class AppViewBase extends React.Component {
 
     render() {
         return (
@@ -29,4 +29,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(BaseApp);
+)(AppViewBase);

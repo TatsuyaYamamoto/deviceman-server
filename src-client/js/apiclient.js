@@ -55,8 +55,8 @@ module.exports = {
                     .end(
                         (err, res) => {
                             if (err) {
-                                reject(err);
-                            } else {
+                                reject(err.response);
+                            }else{
                                 resolve(res.body);
                             }
                         }

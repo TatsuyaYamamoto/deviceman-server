@@ -24,7 +24,7 @@
     "bootstrap": "^3.3.7",
     "chart.js": "^1.1.1",
     "dateformat": "^1.0.12",
-    "history": "^3.0.0",
+    "history": "^4.3.0",
     "material-ui": "^0.15.4",
     "react": "^15.3.1",
     "react-chartjs": "^0.8.0",

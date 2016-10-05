@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { routerActions } from 'react-router-redux'
 import { Link, hashHistory } from 'react-router'
 
-import { authAction } from '../actions/auth.js'
+import { authAction } from '../actions/auth-reducer.js'
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 
