@@ -43,4 +43,12 @@ public class User {
     @Getter
     @Setter
     private Long created;
+
+    /**
+     * 管理者権限
+     */
+    @Column(name = "ADMIN", nullable = false)
+    @Getter
+    @Setter
+    private boolean isAdmin = false;
 }
