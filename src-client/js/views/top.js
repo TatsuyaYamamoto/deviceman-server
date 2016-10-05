@@ -75,6 +75,8 @@ class Top extends React.Component {
 
         this.handleCreateUser = this.handleCreateUser.bind(this);
         this.openCreateUserDialog = this.openCreateUserDialog.bind(this);
+        this.openSuccessDialog = this.openSuccessDialog.bind(this);
+        this.closeSuccessDialog = this.closeSuccessDialog.bind(this);
         this.closeCreateUserDialog = this.closeCreateUserDialog.bind(this);
     };
 
