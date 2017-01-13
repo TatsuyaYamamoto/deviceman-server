@@ -3,7 +3,7 @@ package jp.co.fujixerox.nbd.controller;
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.controller.form.CreateDeviceForm;
 import jp.co.fujixerox.nbd.domain.model.Device;
-import jp.co.fujixerox.nbd.domain.service.DeviceService;
+import jp.co.fujixerox.nbd.service.DeviceService;
 import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;

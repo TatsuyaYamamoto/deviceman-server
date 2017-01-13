@@ -3,7 +3,7 @@ package jp.co.fujixerox.nbd.controller;
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.controller.form.CreateUserForm;
 import jp.co.fujixerox.nbd.domain.model.User;
-import jp.co.fujixerox.nbd.domain.service.UserService;
+import jp.co.fujixerox.nbd.service.UserService;
 import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

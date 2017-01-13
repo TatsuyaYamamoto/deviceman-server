@@ -1,4 +1,4 @@
-package jp.co.fujixerox.nbd.domain.service.notification;
+package jp.co.fujixerox.nbd.service.notification;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -8,7 +8,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import jp.co.fujixerox.nbd.SecretConfig;
+import jp.co.fujixerox.nbd.config.SecretConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

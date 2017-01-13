@@ -2,8 +2,8 @@ package jp.co.fujixerox.nbd.controller;
 
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.domain.model.User;
-import jp.co.fujixerox.nbd.domain.service.UserService;
-import jp.co.fujixerox.nbd.domain.service.notification.NotificationService;
+import jp.co.fujixerox.nbd.service.UserService;
+import jp.co.fujixerox.nbd.service.notification.NotificationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

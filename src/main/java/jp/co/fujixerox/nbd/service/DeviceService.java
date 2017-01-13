@@ -1,4 +1,4 @@
-package jp.co.fujixerox.nbd.domain.service;
+package jp.co.fujixerox.nbd.service;
 
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.HttpError;

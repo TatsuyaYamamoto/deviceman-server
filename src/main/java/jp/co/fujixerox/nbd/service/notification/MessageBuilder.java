@@ -1,4 +1,4 @@
-package jp.co.fujixerox.nbd.domain.service.notification;
+package jp.co.fujixerox.nbd.service.notification;
 
 import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.services.gmail.model.Message;
