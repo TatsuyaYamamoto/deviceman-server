@@ -1,7 +1,7 @@
-package jp.co.fujixerox.nbd.domain.repository;
+package jp.co.fujixerox.nbd.persistence.repository;
 
-import jp.co.fujixerox.nbd.domain.model.CheckOut;
-import jp.co.fujixerox.nbd.domain.model.Log;
+import jp.co.fujixerox.nbd.persistence.entity.DeviceEntity;
+import jp.co.fujixerox.nbd.persistence.entity.DeviceEntity;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public interface LogRepository extends JpaRepository<Log, Integer>, JpaSpecificationExecutor<Log> {}
+public interface DeviceRepository extends JpaRepository<DeviceEntity, String>, JpaSpecificationExecutor<DeviceEntity> {}
