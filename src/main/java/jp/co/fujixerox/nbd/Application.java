@@ -1,19 +1,22 @@
 package jp.co.fujixerox.nbd;
 
 import jp.co.fujixerox.nbd.controller.HttpLogger;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
 @PropertySource(value = {"classpath:secret.properties"})
-//@EntityScan(basePackages = "jp.co.fujixerox.nbd.domain.model")
+//@EntityScan(basePackages = "jp.co.fujixerox.nbd.persistence.entity")
 // equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
@@ -31,6 +34,33 @@ public class Application extends SpringBootServletInitializer {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new HttpLogger());
+            }
+        };
+    }
+
+    /**
+     * Model Mapper Bean
+     *
+     * @return
+     */
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+    /**
+     * Spring Serurity Configuration
+     *
+     * @return WebSecurityConfigurerAdapter instance
+     */
+    @Bean
+    public WebSecurityConfigurerAdapter webSecurityConfigurerAdapter() {
+        return new WebSecurityConfigurerAdapter() {
+            @Override
+            protected void configure(HttpSecurity http) throws Exception {
+                http
+                        .httpBasic().disable()
+                        .csrf().disable();
             }
         };
     }
