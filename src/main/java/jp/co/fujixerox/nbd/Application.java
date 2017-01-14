@@ -17,9 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-@PropertySource(value = {"classpath:secret.properties"})
-//@EntityScan(basePackages = "jp.co.fujixerox.nbd.persistence.entity")
-// equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

@@ -8,7 +8,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import jp.co.fujixerox.nbd.config.SecretConfig;
+import jp.co.fujixerox.nbd.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +26,7 @@ import java.net.Proxy;
 public class GMailService {
 
     @Autowired
-    private SecretConfig secretConfig;
+    private ApplicationProperties properties;
 
     private static final String PROXY_HOST = "proxy.fujixerox.co.jp";
     private static final int PROXY_PORT = 8080;
@@ -60,7 +60,7 @@ public class GMailService {
                 .setTransport(HTTP_TRANSPORT)
                 .setClientSecrets(clientSecrets)
                 .build()
-                .setRefreshToken(secretConfig.REFRESH_TOKEN);
+                .setRefreshToken(properties.getMessage().getRefreshToken());
 
         return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
