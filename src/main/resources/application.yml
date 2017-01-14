@@ -1,0 +1,20 @@
+server:
+  context-path: /torica 
+  port: 8888
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/deviceman_db
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp:
+      test-while-idle: true
+      validation-query: SELECT 1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+custom:
+  message:
+    available: true
+    refresh-token: 1/6Min6BHZHsKazPDigYgOYgfw9ndrBQWDCPurmlI_lEM
