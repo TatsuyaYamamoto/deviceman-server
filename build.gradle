@@ -60,8 +60,12 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-activemq', version: '1.4.1.RELEASE'
 
     compile "org.projectlombok:lombok:1.16.8"
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.1.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-test-autoconfigure', version: '1.4.1.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-test', version: '1.4.1.RELEASE'
-    testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.3.RELEASE'
+
+    /***************************************************
+     * testing
+     */
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile group: 'org.dbunit', name: 'dbunit', version: '2.5.3'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
+    testCompile group: 'commons-io', name: 'commons-io', version: '2.5'
 }
