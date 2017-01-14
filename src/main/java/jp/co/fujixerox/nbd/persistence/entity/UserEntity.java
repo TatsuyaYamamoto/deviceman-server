@@ -37,7 +37,7 @@ public class UserEntity implements Serializable {
     private String address;
 
     /**
-     * 通知アドレス
+     * パスワード
      */
     @Column(name = "PASSWORD", nullable = false)
     @Setter

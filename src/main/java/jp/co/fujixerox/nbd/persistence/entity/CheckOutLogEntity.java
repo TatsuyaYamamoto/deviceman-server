@@ -14,15 +14,9 @@ public class CheckOutLogEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * ログID
-     */
-    @Id
-    @Column(name = "ID")
-    private Integer id;
-
-    /**
      * 借り出しID
      */
+    @Id
     @Column(name = "CHECKOUT_ID", nullable = false)
     private Integer checkoutId;
 
@@ -74,16 +68,4 @@ public class CheckOutLogEntity implements Serializable {
         this.dueReturnTime = checkOut.getDueReturnTime();
         this.returnTime = returnTime;
     }
-
-    /******************************************************************
-     * リレーションシップ
-     */
-    @JoinColumn(name = "DEVICE_ID", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private DeviceEntity deviceEntity;
-
-    @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private UserEntity userEntity;
-
 }
