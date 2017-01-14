@@ -4,20 +4,21 @@ import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.HttpError;
 import jp.co.fujixerox.nbd.persistence.entity.UserEntity;
 import jp.co.fujixerox.nbd.persistence.repository.UserRepository;
+import jp.co.fujixerox.nbd.persistence.specification.UserSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.List;
+
+import static jp.co.fujixerox.nbd.persistence.specification.UserSpecification.contain;
 
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -31,14 +32,21 @@ public class UserService {
     @Autowired
     UserRepository repository;
 
-    public List<UserEntity> getAll(int offset, int limit){
-        return repository.findAll();
+    public UserEntity getById(String id){
+        return repository.findOne(id);
     }
 
-    public UserEntity getById(String id){
-        logger.entry(id);
-        UserEntity userEntity = repository.findOne(id);
-        return logger.traceExit(userEntity);
+    public List<UserEntity> getAll(int offset, int limit){
+        return repository.findAll(new PageRequest(offset, limit)).getContent();
+    }
+
+    public List<UserEntity> getAll(int offset, int limit, String query){
+        return repository.findAll(
+                Specifications
+                        .where(contain(UserSpecification.Columns.ID, query))
+                        .or(contain(UserSpecification.Columns.NAME, query))
+                        .or(contain(UserSpecification.Columns.ADDRESS, query))
+                ,new PageRequest(offset, limit)).getContent();
     }
 
     @Transactional(readOnly = false)

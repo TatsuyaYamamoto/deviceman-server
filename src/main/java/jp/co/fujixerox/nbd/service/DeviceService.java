@@ -2,25 +2,28 @@ package jp.co.fujixerox.nbd.service;
 
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.HttpError;
-import jp.co.fujixerox.nbd.domain.model.CheckOut;
-import jp.co.fujixerox.nbd.domain.model.Device;
-import jp.co.fujixerox.nbd.domain.model.Log;
-import jp.co.fujixerox.nbd.domain.repository.CheckOutRepository;
-import jp.co.fujixerox.nbd.domain.repository.DeviceRepository;
-import jp.co.fujixerox.nbd.domain.repository.LogRepository;
-import jp.co.fujixerox.nbd.domain.repository.UserRepository;
+import jp.co.fujixerox.nbd.persistence.entity.CheckOutEntity;
+import jp.co.fujixerox.nbd.persistence.entity.CheckOutLogEntity;
+import jp.co.fujixerox.nbd.persistence.entity.DeviceEntity;
+import jp.co.fujixerox.nbd.persistence.repository.CheckOutRepository;
+import jp.co.fujixerox.nbd.persistence.repository.DeviceRepository;
+import jp.co.fujixerox.nbd.persistence.repository.LogRepository;
+import jp.co.fujixerox.nbd.persistence.repository.UserRepository;
+import jp.co.fujixerox.nbd.persistence.specification.DeviceSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
+import static jp.co.fujixerox.nbd.persistence.specification.DeviceSpecification.contain;
+
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Transactional(readOnly = true)
 public class DeviceService {
     private static Logger logger = LogManager.getLogger(DeviceService.class);
@@ -37,16 +40,21 @@ public class DeviceService {
     @Autowired
     LogRepository logRepo;
 
-    public List<Device> getAll(int offset, int limit){
-        logger.entry(offset, limit);
-        List<Device> devices = deviceRepo.findAll();
-        return logger.traceExit(devices);
+    public DeviceEntity getById(String id) {
+        return deviceRepo.findOne(id);
     }
 
-    public Device getById(String deviceId){
-        logger.entry(deviceId);
-        Device device = deviceRepo.findOne(deviceId);
-        return logger.traceExit(device);
+    public List<DeviceEntity> getAll(int offset, int limit) {
+        return deviceRepo.findAll(new PageRequest(offset, limit)).getContent();
+    }
+
+    public List<DeviceEntity> getAll(int offset, int limit, String query) {
+        return deviceRepo.findAll(
+                Specifications
+                        .where(contain(DeviceSpecification.Columns.ID, query))
+                        .or(contain(DeviceSpecification.Columns.NAME, query))
+                        .or(contain(DeviceSpecification.Columns.MAC_ADDRESS, query))
+                , new PageRequest(offset, limit)).getContent();
     }
 
     /**
@@ -59,54 +67,26 @@ public class DeviceService {
      */
     @Transactional(readOnly = false)
     public void register(
-            String id,
+            String uuid,
+            String macAddress,
             String name) throws ApplicationException {
-        logger.entry(id, name);
+        logger.entry(uuid, name);
 
-        if(deviceRepo.exists(id)){
-            logger.trace("cannot register a device as a result of to conflict (ID: {})", id);
+        if (deviceRepo.exists(uuid)) {
+            logger.trace("cannot register a device as a result of to conflict (ID: {})", uuid);
             throw new ApplicationException(HttpError.ENTITY_CONFLICT);
         }
 
-        Device newDevice = new Device();
-        newDevice.setId(id.toLowerCase());
-        newDevice.setName(name);
-        newDevice.setCreated(System.currentTimeMillis());
-        newDevice.setDisabled(false);
+        DeviceEntity newDeviceEntity = new DeviceEntity(
+                uuid,
+                macAddress.toLowerCase(),
+                name,
+                false
+        );
 
-        deviceRepo.save(newDevice);
+        deviceRepo.save(newDeviceEntity);
 
-        logger.traceExit("success to save a new device, {}", newDevice);
-    }
-
-    /**
-     * 端末リストで一括更新する
-     * IDはlower caseに変換される
-     *
-     * @param devices
-     * @throws ApplicationException
-     */
-    @Transactional(readOnly = false)
-    public void bulkUpdate(List<Device> devices) throws ApplicationException {
-        logger.entry(devices);
-
-        if(devices.size() == 0){
-            logger.trace("user list has no users.");
-            throw new ApplicationException(HttpError.EMPTY_CSV);
-        }
-
-        for(Device device: devices){
-            if(deviceRepo.exists(device.getId())) {
-                // 既存の場合名前の更新
-                Device existedDevice = deviceRepo.findOne(device.getId());
-                existedDevice.setName(device.getName());
-            } else{
-                device.setId(device.getId().toLowerCase());
-                deviceRepo.save(device);
-            }
-        }
-
-        logger.traceExit("success to bulk update");
+        logger.traceExit("success to save a new device, {}", newDeviceEntity);
     }
 
     @Transactional(readOnly = false)
@@ -117,33 +97,29 @@ public class DeviceService {
         logger.entry(userId, deviceId, dueReturnTime);
 
         // 入力値確認
-        if(!userRepo.exists(userId)){
+        if (!userRepo.exists(userId)) {
             logger.trace("cannnot checkout not for storing a user (ID: {}))", userId);
             throw new ApplicationException(HttpError.ENTITY_NOT_FOUND);
         }
-        if(!deviceRepo.exists(deviceId)){
+        if (!deviceRepo.exists(deviceId)) {
             logger.trace("cannnot checkout not for storing a device (ID: {}))", deviceId);
             throw new ApplicationException(HttpError.ENTITY_NOT_FOUND);
         }
 
-        CheckOut co = checkOutRepo.findByUserIdAndDeviceId(userId, deviceId);
+        CheckOutEntity co = checkOutRepo.findByUserIdAndDeviceId(userId, deviceId);
         if (co != null) {
             // 貸出中
             logger.trace("cannnot checkout for to confict checking out)", deviceId);
             throw new ApplicationException(HttpError.CHECKOUT_CONFLICT);
         }
 
-        if(dueReturnTime < System.currentTimeMillis()){
+        if (dueReturnTime < System.currentTimeMillis()) {
             // 今日の日付より古い返却日を指定させない
             logger.trace("cannnot checkout as a result of requested date later than now)", deviceId);
             throw new ApplicationException(HttpError.ILLEGAL_DATE);
         }
 
-        co = new CheckOut();
-        co.setUserId(userId);
-        co.setDeviceId(deviceId);
-        co.setCheckOutTime(System.currentTimeMillis());
-        co.setDueReturnTime(dueReturnTime);
+        co = new CheckOutEntity(userId, deviceId, new Date(), new Date(dueReturnTime));
         checkOutRepo.save(co);
 
         logger.traceExit("success to checkout, {}", co);
@@ -156,28 +132,23 @@ public class DeviceService {
         logger.entry(userId, deviceId);
 
         // 入力値確認
-        if(!userRepo.exists(userId)){
+        if (!userRepo.exists(userId)) {
             logger.trace("cannnot checkout not for storing a user (ID: {}))", userId);
             throw new ApplicationException(HttpError.ENTITY_NOT_FOUND);
         }
 
-        CheckOut co = checkOutRepo.findByDeviceId(deviceId);
+        CheckOutEntity co = checkOutRepo.findByDeviceId(deviceId);
 
-        if(co == null){
+        if (co == null) {
             // 未貸出状態
             logger.trace("not checked out");
             throw logger.throwing(new ApplicationException(HttpError.NOT_CHECKOUT));
         }
 
-        Log log = new Log();
-        log.setId(co.getId());
-        log.setUserId(co.getUserId());
-        log.setDeviceId(co.getDeviceId());
-        log.setCheckOutTime(co.getCheckOutTime());
-        log.setReturnTime(System.currentTimeMillis());
+        CheckOutLogEntity checkOutLogEntity = new CheckOutLogEntity(co, new Date());
 
         checkOutRepo.delete(co);
-        logRepo.save(log);
+        logRepo.save(checkOutLogEntity);
 
         logger.traceExit("success to return device , {}", co);
     }
