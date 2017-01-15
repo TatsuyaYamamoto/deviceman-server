@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 public class DeviceSpecification {
     public enum Columns {
-        ID, MAC_ADDRESS, NAME
+        id, name, macAddress
     }
 
     /**

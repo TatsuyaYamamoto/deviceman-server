@@ -81,6 +81,7 @@ public class DeviceEntity implements Serializable {
     @PrePersist
     public void onPersist() {
         created = new Date();
+        updated = new Date();
     }
 
     @PreUpdate

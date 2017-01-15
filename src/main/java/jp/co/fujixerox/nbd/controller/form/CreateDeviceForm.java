@@ -11,6 +11,11 @@ public class CreateDeviceForm {
     @Setter
     private String id;
 
+    @NotBlank(message = "端末IDは必須項目です。")
+    @Getter
+    @Setter
+    private String macAddress;
+
     @NotBlank(message = "端末名は必須項目です。")
     @Getter
     @Setter

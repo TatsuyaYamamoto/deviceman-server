@@ -2,6 +2,7 @@ package jp.co.fujixerox.nbd.service;
 
 import jp.co.fujixerox.nbd.ApplicationException;
 import jp.co.fujixerox.nbd.HttpError;
+import jp.co.fujixerox.nbd.exception.ConflictException;
 import jp.co.fujixerox.nbd.persistence.entity.CheckOutEntity;
 import jp.co.fujixerox.nbd.persistence.entity.CheckOutLogEntity;
 import jp.co.fujixerox.nbd.persistence.entity.DeviceEntity;
@@ -10,6 +11,7 @@ import jp.co.fujixerox.nbd.persistence.repository.DeviceRepository;
 import jp.co.fujixerox.nbd.persistence.repository.LogRepository;
 import jp.co.fujixerox.nbd.persistence.repository.UserRepository;
 import jp.co.fujixerox.nbd.persistence.specification.DeviceSpecification;
+import jp.co.fujixerox.nbd.service.validate.BeanValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -40,21 +44,24 @@ public class DeviceService {
     @Autowired
     LogRepository logRepo;
 
+
+    @Autowired
+    private BeanValidator<DeviceEntity> validator;
+
     public DeviceEntity getById(String id) {
-        return deviceRepo.findOne(id);
+        if (deviceRepo.exists(id)) {
+            return deviceRepo.findOne(id);
+        } else {
+            throw new EntityNotFoundException();
+        }
     }
 
-    public List<DeviceEntity> getAll(int offset, int limit) {
-        return deviceRepo.findAll(new PageRequest(offset, limit)).getContent();
-    }
-
-    public List<DeviceEntity> getAll(int offset, int limit, String query) {
+    public List<DeviceEntity> getAll(String query) {
         return deviceRepo.findAll(
                 Specifications
-                        .where(contain(DeviceSpecification.Columns.ID, query))
-                        .or(contain(DeviceSpecification.Columns.NAME, query))
-                        .or(contain(DeviceSpecification.Columns.MAC_ADDRESS, query))
-                , new PageRequest(offset, limit)).getContent();
+                        .where(contain(DeviceSpecification.Columns.id, query))
+                        .or(contain(DeviceSpecification.Columns.name, query))
+                        .or(contain(DeviceSpecification.Columns.macAddress, query)));
     }
 
     /**
@@ -62,28 +69,31 @@ public class DeviceService {
      * IDは小文字に変換される
      *
      * @param id
+     * @param macAddress
      * @param name
-     * @throws ApplicationException
+     * @throws ConflictException
+     * @throws ConstraintViolationException
      */
     @Transactional(readOnly = false)
     public void register(
-            String uuid,
+            String id,
             String macAddress,
-            String name) throws ApplicationException {
-        logger.entry(uuid, name);
+            String name) throws ConflictException, ConstraintViolationException {
+        logger.entry(id, name);
 
-        if (deviceRepo.exists(uuid)) {
-            logger.trace("cannot register a device as a result of to conflict (ID: {})", uuid);
-            throw new ApplicationException(HttpError.ENTITY_CONFLICT);
+        if (deviceRepo.exists(id)) {
+            String message = String.format("cannot register as a result of to conflict (ID: %s)", id);
+            throw new ConflictException(message);
         }
 
         DeviceEntity newDeviceEntity = new DeviceEntity(
-                uuid,
+                id,
                 macAddress.toLowerCase(),
                 name,
                 false
         );
 
+        validator.validate(newDeviceEntity);
         deviceRepo.save(newDeviceEntity);
 
         logger.traceExit("success to save a new device, {}", newDeviceEntity);
