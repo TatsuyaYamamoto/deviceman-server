@@ -1,14 +1,18 @@
 package jp.co.fujixerox.nbd.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "CHECK_OUT")
+@Table(name = "CHECKOUT")
 @Getter
+@ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CheckOutEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +40,7 @@ public class CheckOutEntity implements Serializable {
     /**
      * 貸出日
      */
-    @Column(name = "CHECK_OUT_TIME", nullable = false)
+    @Column(name = "CHECKOUT_TIME", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkOutTime;
 

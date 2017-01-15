@@ -1,16 +1,22 @@
 package jp.co.fujixerox.nbd.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "USERS")
 @Getter
+@ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -19,6 +25,7 @@ public class UserEntity implements Serializable {
      */
     @Id
     @Column(name = "ID")
+    @Pattern(regexp = "fx[0-9]{5}")
     private String id;
 
 
@@ -26,6 +33,7 @@ public class UserEntity implements Serializable {
      * アプリとかの表示名
      */
     @Column(name = "NAME", nullable = false, unique = false)
+    @Size(max = 60)
     @Setter
     private String name;
 
@@ -33,6 +41,7 @@ public class UserEntity implements Serializable {
      * 通知アドレス
      */
     @Column(name = "ADDRESS", nullable = false)
+    @Pattern(regexp = "[a-z0-9\\+\\-_]+(\\.[a-z0-9\\+\\-_]+)*@([a-z0-9\\-]+\\.)+[a-z]{2,6}")
     @Setter
     private String address;
 
@@ -40,6 +49,8 @@ public class UserEntity implements Serializable {
      * パスワード
      */
     @Column(name = "PASSWORD", nullable = false)
+    @Size(min = 4)
+    @Pattern(regexp = "[\\x20-\\x7e]+") // ascii
     @Setter
     private String password;
 
@@ -82,6 +93,7 @@ public class UserEntity implements Serializable {
     @PrePersist
     public void onPersist() {
         created = new Date();
+        updated = new Date();
     }
 
     @PreUpdate

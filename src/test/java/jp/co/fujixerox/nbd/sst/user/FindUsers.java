@@ -4,40 +4,44 @@ import jp.co.fujixerox.nbd.sst.SstTestBase;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(Enclosed.class)
 public class FindUsers {
-    private static final String TARGET_PATH = "/users/";
+    private static final String TARGET_PATH = "/torica/api/users/";
 
     public static class Success extends SstTestBase {
         @Test
-        public void sample() throws Exception {
-            String expectJson = loadText("classpath:" + "sst/expect/get_user_info_v1/success/sample.json");
-
-            MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-            parameters.add("id", "member");
-
-            MultiValueMap<String, String> headers = new HttpHeaders();
-            headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE);
-
+        public void ok() throws Exception {
             ResponseEntity<String> response = getRestTemplate()
                     .exchange(
                             TARGET_PATH,
                             HttpMethod.GET,
-                            new HttpEntity<>(parameters, headers),
+                            null,
                             String.class);
 
-            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-            JSONAssert.assertEquals(expectJson, response.getBody(), false);
+            assertThat(response.getBody(), hasJsonPath("$.users"));
+            assertThat(response.getBody(), hasJsonPath("$.users[*]", hasSize(2)));
         }
-    }
 
-    public static class BadRequestValue extends SstTestBase {
+        @Test
+        public void withQuery() throws Exception {
+            ResponseEntity<String> response = getRestTemplate()
+                    .exchange(
+                            TARGET_PATH + "?query=hoge.hogeo@hogehoge.com",
+                            HttpMethod.GET,
+                            null,
+                            String.class);
+
+            assertThat(response.getBody(), hasJsonPath("$.users"));
+            assertThat(response.getBody(), hasJsonPath("$.users[*]", hasSize(1)));
+            assertThat(response.getBody(), hasJsonPath("$.users[0].id", is("fx12345")));
+        }
     }
 }

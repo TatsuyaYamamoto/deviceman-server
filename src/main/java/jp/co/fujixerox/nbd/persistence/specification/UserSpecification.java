@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 
 public class UserSpecification {
     public enum Columns {
-        ID, NAME, ADDRESS
+        id, name, address
     }
 
     /**

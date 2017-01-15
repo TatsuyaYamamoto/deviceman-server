@@ -1,36 +1,45 @@
 package jp.co.fujixerox.nbd.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "DEVICES")
 @Getter
+@ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DeviceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 端末識別子。UUID
+     * 端末識別子。IMEI
      */
     @Id
     @Column(name = "ID")
-    private String uuid;
+    @Pattern(regexp = "[0-9]{15}")  // IMEI
+    private String id;
 
     /**
      * MACアドレス
      */
     @Column(name = "MAC_ADDRESS", nullable = false)
+    @Pattern(regexp = "([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}")
     private String macAddress;
 
     /**
      * 端末名
      */
     @Column(name = "NAME", nullable = false)
+    @Size(max = 60)
     @Setter
     private String name;
 
@@ -59,11 +68,11 @@ public class DeviceEntity implements Serializable {
     }
 
     public DeviceEntity(
-            @NonNull String uuid,
+            @NonNull String id,
             @NonNull String macAddress,
             @NonNull String name,
             boolean hasWirelessLan) {
-        this.uuid = uuid;
+        this.id = id;
         this.macAddress = macAddress;
         this.name = name;
         this.hasWirelessLan = hasWirelessLan;

@@ -22,6 +22,8 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -35,12 +37,16 @@ public abstract class SstTestBase {
     @Getter
     private TestRestTemplate restTemplate;
 
+    @PersistenceContext
+    @Getter
+    private EntityManager entityManager;
+
     @Getter
     @Autowired
     private ResourceLoader resourceLoader;
 
     @Autowired
-    DataSourceProperties dataSourceProperties;
+    private DataSourceProperties dataSourceProperties;
 
     @LocalServerPort
     private void createTestRestTemplate(int randomPort) {
@@ -63,8 +69,6 @@ public abstract class SstTestBase {
 
 
     /**
-     *
-     *
      * @param url
      * @param userName
      * @param password
@@ -72,7 +76,7 @@ public abstract class SstTestBase {
      * @param dataset
      * @throws Exception
      */
-    protected static void loadDbUnitDataSet(
+    private static void loadDbUnitDataSet(
             String url,
             String userName,
             String password,

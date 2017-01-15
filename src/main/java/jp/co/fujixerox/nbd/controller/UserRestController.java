@@ -1,12 +1,11 @@
 package jp.co.fujixerox.nbd.controller;
 
-import jp.co.fujixerox.nbd.ApplicationException;
+import jp.co.fujixerox.nbd.ApplicationProperties;
 import jp.co.fujixerox.nbd.controller.form.CreateUserForm;
-import jp.co.fujixerox.nbd.domain.model.User;
+import jp.co.fujixerox.nbd.exception.ConflictException;
+import jp.co.fujixerox.nbd.persistence.entity.UserEntity;
 import jp.co.fujixerox.nbd.service.UserService;
-import jp.co.fujixerox.nbd.exception.InvalidRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
@@ -33,25 +33,30 @@ public class UserRestController {
     @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
 
+    @Autowired
+    private ApplicationProperties properties;
+
     /**
      * 登録済みユーザーリストをすべて取得する
+     *
      * @return
      */
     @RequestMapping(
             value = "/",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity getAll(){
-        List<User> users = userService.getAll(0, 0);
+    public ResponseEntity findUsers(@RequestParam(name = "query", required = false) String query) {
+        List<UserEntity> userEntities = userService.getAll(query);
 
-        Map<String, List> response = new HashMap();
-        response.put("users", users);
+        Map<String, List> response = new HashMap<>();
+        response.put("users", userEntities);
 
-        return new ResponseEntity(response, HttpStatus.OK);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
      * ユーザID検索
+     *
      * @param id
      * @return
      */
@@ -59,14 +64,15 @@ public class UserRestController {
             value = "/{userId}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity getOne(
-            @PathVariable("userId") String id){
-        User user = userService.getById(id);
-
-        if(user == null){
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+    public ResponseEntity getUser(
+            @PathVariable("userId") String id) {
+        UserEntity userEntity;
+        try {
+            userEntity = userService.getById(id);
+        } catch (Throwable e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return new ResponseEntity(user, HttpStatus.OK);
+        return ResponseEntity.ok().body(userEntity);
     }
 
     /**
@@ -81,37 +87,37 @@ public class UserRestController {
             value = "/",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity register(
+    public ResponseEntity registerUser(
             @RequestBody @Valid CreateUserForm userForm,
             BindingResult bindingResult,
-            UriComponentsBuilder uriBuilder){
+            UriComponentsBuilder uriBuilder) {
 
         /* bean validation */
         if (bindingResult.hasErrors()) {
-            throw new InvalidRequestException(bindingResult.toString(), bindingResult);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         /* execute */
         try {
             userService.register(userForm.getId(), userForm.getName(), userForm.getAddress());
-        } catch (ApplicationException e) {
-            return new ResponseEntity(HttpStatus.CONFLICT);
+        } catch (ConflictException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (ConstraintViolationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         /* messaging */
-        Message<String> message = MessageBuilder
-                .withPayload(userForm.getId())
-                .build();
-        jmsMessagingTemplate.send("new-user", message);
+        if (properties.getMessage().isAvailable()) {
+            Message<String> message = MessageBuilder
+                    .withPayload(userForm.getId())
+                    .build();
+            jmsMessagingTemplate.send("new-user", message);
+        }
 
         /* response */
         URI location = uriBuilder.path("api/users/{userId}")
                 .buildAndExpand(userForm.getId())
                 .toUri();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(location);
-
-        return new ResponseEntity(headers, HttpStatus.ACCEPTED);
+        return ResponseEntity.created(location).build();
     }
 }

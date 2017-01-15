@@ -1,15 +1,19 @@
 package jp.co.fujixerox.nbd.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "CHECK_OUT_LOGS")
+@Table(name = "CHECKOUT_LOGS")
 @Getter
+@ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CheckOutLogEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

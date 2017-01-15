@@ -20,21 +20,27 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 war {
-    archiveName = 'torica.war'
+    baseName = 'torica'
 }
 
 repositories {
     mavenCentral()
 }
 
+configurations {
+    providedRuntime
+}
+
 dependencies {
-    // Spring Boot
+    // Spring Boot 
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-security')
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+
     providedRuntime('org.springframework.boot:spring-boot-devtools')
+    providedRuntime group: 'org.springframework', name: 'springloaded', version: '1.2.6.RELEASE'
 
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.+'
 
@@ -42,30 +48,33 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.6.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.6.2'
 
-    // Apache License Version 2.0
+    // Apache License Version 2.0 
     // https://github.com/jhalterman/modelmapper/blob/master/LICENSE.txt
     compile group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '0.7.5'
 
-    // Google API Library
+    // Google API Library 
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'com.google.apis:google-api-services-gmail:v1-rev48-1.22.0'
 
-    // java mail
+    // java mail 
     compile group: 'javax.mail', name: 'mail', version: '1.4.7'
 
-    // template engine
+    // template engine 
     compile group: 'com.github.spullara.mustache.java', name: 'compiler', version: '0.9.3'
 
-    // JMS
+    // JMS 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-activemq', version: '1.4.1.RELEASE'
 
-    compile "org.projectlombok:lombok:1.16.8"
+    compileOnly('org.projectlombok:lombok')
+    testCompileOnly('org.projectlombok:lombok')
 
-    /***************************************************
+    /***************************************************                  
      * testing
      */
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile group: 'org.dbunit', name: 'dbunit', version: '2.5.3'
     testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
     testCompile group: 'commons-io', name: 'commons-io', version: '2.5'
+    testCompile group: 'com.jayway.jsonpath', name: 'json-path-assert', version: '2.2.0'
+
 }
