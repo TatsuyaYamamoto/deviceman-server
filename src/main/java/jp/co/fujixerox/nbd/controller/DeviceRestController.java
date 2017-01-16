@@ -115,7 +115,7 @@ public class DeviceRestController {
             value = "/{deviceId}/checkout",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity checkout(
+    public ResponseEntity checkoutDevice(
             @PathVariable("deviceId") String deviceId,
             @RequestParam(name = "user_id") String userId,
             @RequestParam(name = "due_return_time") long dueReturnTime) {
