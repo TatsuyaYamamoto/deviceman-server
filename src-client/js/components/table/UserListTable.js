@@ -1,15 +1,11 @@
 import React from "react";
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table";
-import TextField from "material-ui/TextField";
 
 export default class UserList extends React.Component {
     render() {
         return (
             <div>
-                <TextField
-                    floatingLabelText="Search with ID, NAME, and Address"
-                    type="search"/>
-                <Table>
+                <Table selectable={false}>
                     <TableHeader displaySelectAll={false}>
                         <TableRow>
                             <TableHeaderColumn>ユーザーID</TableHeaderColumn>

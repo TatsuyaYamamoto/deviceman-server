@@ -3,7 +3,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 import dateFormat from 'dateformat';
 
-import ApiClient from '../apiclient.js';
+import ApiClient from '../Apiclient.js';
 import Constant from '../constants.js';
 
 export default class CheckoutLogList extends React.Component {

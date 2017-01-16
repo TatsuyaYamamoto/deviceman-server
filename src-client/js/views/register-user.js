@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import Paper from 'material-ui/Paper';
 
-import ApiClient from '../apiclient.js';
+import ApiClient from '../Apiclient.js';
 
 const styles = {
     headline: {

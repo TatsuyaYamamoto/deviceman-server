@@ -1,9 +1,6 @@
 import React from "react";
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table";
-import TextField from 'material-ui/TextField';
-
 import dateFormat from "dateformat";
-import ApiClient from "../../apiclient.js";
 import Constant from "../../constants.js";
 
 const styles = {
@@ -20,9 +17,6 @@ export default class DeviceList extends React.Component {
         return (
 
             <div>
-                <TextField
-                    floatingLabelText="Search with ID, NAME, and Address"
-                    type="search"/>
                 <Table>
                     <TableHeader displaySelectAll={false}>
                         <TableRow>

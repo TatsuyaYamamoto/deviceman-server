@@ -1,47 +1,47 @@
-import request from 'superagent';
-import constants from './constants.js';
+import request from "superagent";
 
 module.exports = {
-    getCheckout: function(){
+    getCheckout: function () {
         return new Promise((resolve, reject) => {
             request
                 .get("/torica/api/checkout")
-                .end(function(err, res) {
+                .end(function (err, res) {
                     if (err) {
                         reject(err);
-                    }else{
+                    } else {
                         resolve(res.body);
                     }
                 })
         })
     },
-    getCheckoutLog: function(){
+    getCheckoutLog: function () {
         return new Promise((resolve, reject) => {
             request
                 .get("/torica/api/checkout/log")
-                .end(function(err, res) {
+                .end(function (err, res) {
                     if (err) {
                         reject(err);
-                    }else{
+                    } else {
                         resolve(res.body);
                     }
                 })
         })
     },
-    getUsers: function(callback){
+    getUsers: function (query) {
         return new Promise((resolve, reject) => {
-                request
-                    .get("/torica/api/users/")
-                    .end(function(err, res) {
-                        if (err) {
-                            reject(err);
-                        }else{
-                            resolve(res.body);
-                        }
-                    })
+            request
+                .get("/torica/api/users/")
+                .query({query: query})
+                .end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res.body);
+                    }
+                })
         })
     },
-    registerUser: function(id, name, address, password, callback){
+    registerUser: function (id, name, address, password, callback) {
         return new Promise(
             (resolve, reject) => {
                 request
@@ -56,7 +56,7 @@ module.exports = {
                         (err, res) => {
                             if (err) {
                                 reject(err.response);
-                            }else{
+                            } else {
                                 resolve(res.body);
                             }
                         }
@@ -64,23 +64,24 @@ module.exports = {
             }
         );
     },
-    getDevices: function(){
+    getDevices: function (query) {
         return new Promise(
             (resolve, reject) => {
                 request
                     .get("/torica/api/devices/")
+                    .query({query: query})
                     .end(
                         (err, res) => {
                             if (err) {
                                 throw err;
-                            }else{
+                            } else {
                                 resolve(res.body);
                             }
                         })
 
             })
     },
-    registerDevice: function(id, name){
+    registerDevice: function (id, name) {
         return new Promise(
             (resolve, reject) => {
                 request
@@ -101,7 +102,7 @@ module.exports = {
             }
         );
     },
-    uploadCsvDevices: function(formData){
+    uploadCsvDevices: function (formData) {
         return new Promise(
             (resolve, reject) => {
                 request

@@ -1,16 +1,13 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Link, hashHistory } from 'react-router'
-
-import CircularProgress from 'material-ui/CircularProgress';
-import RaisedButton from 'material-ui/RaisedButton';
-
-import ApiClient from '../apiclient.js'
-
-import LoginDialog from'../components/login-dialog.js'
-import CreateUserDialog from'../components/createuser-dialog.js'
-import AlertDialog from '../components/alert-dialog.js'
+import React from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {Link, hashHistory} from "react-router";
+import CircularProgress from "material-ui/CircularProgress";
+import RaisedButton from "material-ui/RaisedButton";
+import ApiClient from "../Apiclient.js";
+import LoginDialog from "../components/login-dialog.js";
+import CreateUserDialog from "../components/createuser-dialog.js";
+import AlertDialog from "../components/alert-dialog.js";
 
 const styles = {
     headline: {
@@ -65,7 +62,7 @@ const initialState = {
 };
 
 class Top extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = initialState;
 
@@ -83,7 +80,7 @@ class Top extends React.Component {
     /****************************
      * ログインダイアログ
      */
-    openLoginDialog(){
+    openLoginDialog() {
         const state = this.state.loginDialog;
         state.isOpen = true;
         state.error = {};
@@ -91,32 +88,32 @@ class Top extends React.Component {
         this.setState({loginDialog: state});
     }
 
-    closeLoginDialog(){
+    closeLoginDialog() {
         const state = this.state.loginDialog;
         state.isOpen = false;
 
         this.setState({loginDialog: state});
     }
 
-    handleLogin(userId, password){
+    handleLogin(userId, password) {
         console.trace("Top#login()", userId, password);
 
-        if(userId === '1234' && password === ''){
+        if (userId === '1234' && password === '') {
             this.closeLoginDialog();
 
             localStorage.setItem('torica_token', 'tmp');
             hashHistory.push('console')
-        } else if(userId === '1234' && password !== ''){
+        } else if (userId === '1234' && password !== '') {
             const state = this.state.loginDialog;
             state.error.password = "パスワード異なっています。";
 
             this.setState({loginDialog: state});
-        } else if(userId === '1111'){
+        } else if (userId === '1111') {
             const state = this.state.loginDialog;
             state.error.id = "入力されたIDには管理権限がありません。";
 
             this.setState({loginDialog: state});
-        }　else {
+        } else {
             const state = this.state.loginDialog;
             state.error.id = "存在しないIDです。";
 
@@ -127,7 +124,7 @@ class Top extends React.Component {
     /****************************
      * ユーザー作成ダイアログ
      */
-    openCreateUserDialog(){
+    openCreateUserDialog() {
         const state = this.state.createUserDialog;
         state.isOpen = true;
         state.error = {};
@@ -135,26 +132,26 @@ class Top extends React.Component {
         this.setState({createUserDialog: state});
     }
 
-    closeCreateUserDialog(){
+    closeCreateUserDialog() {
         const state = this.state.createUserDialog;
         state.isOpen = false;
 
         this.setState({createUserDialog: state});
     }
 
-    openSuccessDialog(){
+    openSuccessDialog() {
         const successDialogState = this.state.successDialog;
         successDialogState.isOpen = true;
         this.setState({successDialog: successDialogState})
     }
 
-    closeSuccessDialog(){
+    closeSuccessDialog() {
         const successDialogState = this.state.successDialog;
         successDialogState.isOpen = false;
         this.setState({successDialog: successDialogState})
     }
 
-    handleCreateUser(userId, userName, address){
+    handleCreateUser(userId, userName, address) {
         console.trace("Top#createUser()", userId, userName, address);
 
         this.setState({isProgress: true});
@@ -168,18 +165,18 @@ class Top extends React.Component {
             .catch((response) => {
                 const state = this.state.createUserDialog;
 
-                switch (response.status){
+                switch (response.status) {
                     case 400:
                         const errors = response.body.errors;
                         state.error = {};
-                        errors.forEach((error)=>{
-                            if(error.field == 'id'){
+                        errors.forEach((error)=> {
+                            if (error.field == 'id') {
                                 state.error.id = error.message;
                             }
-                            if(error.field == 'name'){
+                            if (error.field == 'name') {
                                 state.error.name = error.message;
                             }
-                            if(error.field == 'address'){
+                            if (error.field == 'address') {
                                 state.error.address = error.message;
                             }
                         });
@@ -200,8 +197,8 @@ class Top extends React.Component {
                 {this.state.isProgress && <CircularProgress style={styles.circularProgress}/>}
 
                 <div style={{textAlign: "center"}}>
-                    <img src={"/torica/img/torica.png"} />
-                    <h1>Torica</h1>
+                    <img src={"/torica/img/torica.png"}/>
+                    <h1>Torica!</h1>
                     Toriaezu tanmatsu no kashidashi Rireki wo nokoshite okouCa.
 
                 </div>
@@ -230,7 +227,7 @@ class Top extends React.Component {
                     onClick={this.openLoginDialog}
                     fullWidth={true}
                     primary={true}
-                    style={styles.button} />
+                    style={styles.button}/>
 
                 <RaisedButton
                     id={BUTTON_ID.TO_REGISTER_USER_VIEW}
@@ -238,7 +235,7 @@ class Top extends React.Component {
                     onClick={this.openCreateUserDialog}
                     fullWidth={true}
                     primary={true}
-                    style={styles.button} />
+                    style={styles.button}/>
 
                 <Link to="/list">
                     <RaisedButton
@@ -246,7 +243,7 @@ class Top extends React.Component {
                         label="ユーザー・端末・貸出情報"
                         fullWidth={true}
                         primary={true}
-                        style={styles.button} />
+                        style={styles.button}/>
                 </Link>
 
             </div>
@@ -254,17 +251,14 @@ class Top extends React.Component {
     }
 }
 
-Top.propTypes = {
-};
+Top.propTypes = {};
 
 function mapStateToProps(state) {
-    return {
-    };
+    return {};
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-    };
+    return {};
 }
 
 export default connect(

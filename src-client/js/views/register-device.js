@@ -9,7 +9,7 @@ import Dialog from 'material-ui/Dialog';
 
 import Header from '../components/header.js';
 
-import ApiClient from '../apiclient.js';
+import ApiClient from '../Apiclient.js';
 
 import Dropzone from 'react-dropzone'
 
