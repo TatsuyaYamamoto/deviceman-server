@@ -10,7 +10,9 @@ spring:
     dbcp:
       test-while-idle: true
       validation-query: SELECT 1
+    schema: deviceman_db
   jpa:
+    database: mysql
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -18,3 +20,5 @@ custom:
   message:
     available: true
     refresh-token: 1/6Min6BHZHsKazPDigYgOYgfw9ndrBQWDCPurmlI_lEM
+  token:
+    issuer: Torica Device Manager

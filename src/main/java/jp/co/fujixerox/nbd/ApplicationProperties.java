@@ -11,11 +11,18 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ApplicationProperties {
     private Message message;
+    private Token token;
 
     @Getter
     @Setter
     public static class Message {
         private boolean available;
         private String refreshToken;
+    }
+
+    @Getter
+    @Setter
+    public static class Token {
+        private String issuer;
     }
 }
