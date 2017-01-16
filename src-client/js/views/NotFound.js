@@ -1,11 +1,7 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Link } from 'react-router'
-import RaisedButton from 'material-ui/RaisedButton';
-
-import Header from '../components/header.js'
-
+import React from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {Link} from "react-router";
 
 const style = {
     button: {
@@ -24,17 +20,14 @@ class NotFound extends React.Component {
 }
 
 
-NotFound.propTypes = {
-};
+NotFound.propTypes = {};
 
 function mapStateToProps(state) {
-    return {
-    };
+    return {};
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-    };
+    return {};
 }
 
 export default connect(

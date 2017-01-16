@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router'
 
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
-import Paper from 'material-ui/Paper';
 
 import ApiClient from '../Apiclient.js';
+
+import Dropzone from 'react-dropzone'
 
 const styles = {
     headline: {
@@ -18,13 +20,6 @@ const styles = {
     },
     button: {
         margin: 12,
-    },
-    paper: {
-        height: 100,
-        width: 100,
-        margin: 20,
-        textAlign: 'center',
-        display: 'inline-block',
     }
 };
 
@@ -32,9 +27,10 @@ const FORM_INPUT_ID = {
     USER_ID: "userId",
     USER_NAME: "userName",
     ADDRESS: "address",
+    PASSWORD: "password"
 };
 
-class RegisterUser extends React.Component {
+class RegisterDevice extends React.Component {
 
     constructor(props){
         super(props);
@@ -42,13 +38,11 @@ class RegisterUser extends React.Component {
             isOpenSuccessDialog: false,
             formValue: {
                 id: "",
-                name: "",
-                address: "",
+                name: ""
             },
             errorText: {
                 id: "",
-                name: "",
-                address: "",
+                name: ""
             },
             dialog: {
                 title: "",
@@ -60,6 +54,7 @@ class RegisterUser extends React.Component {
         this.closeSuccessDialog = this.closeSuccessDialog.bind(this);
         this.onChangeForm = this.onChangeForm.bind(this);
         this.submit = this.submit.bind(this);
+        this.onDrop = this.onDrop.bind(this);
     }
 
     openDialog(title, description){
@@ -85,21 +80,17 @@ class RegisterUser extends React.Component {
             case FORM_INPUT_ID.USER_NAME:
                 formValue.name = e.target.value;
                 break;
-            case FORM_INPUT_ID.ADDRESS:
-                formValue.address = e.target.value;
-                break;
         }
         this.setState({formValue: formValue});
     }
 
     submit(){
-        const userId = this.state.formValue.id;
-        const userName = this.state.formValue.name;
-        const address = this.state.formValue.address;
+        const deviceId = this.state.formValue.id;
+        const deviceName = this.state.formValue.name;
 
-        ApiClient.registerUser(userId, userName, address)
+        ApiClient.registerDevice(deviceId, deviceName)
             .then((obj) => {
-                this.openDialog("ユーザー登録が成功しました。")
+                this.openDialog("端末登録が成功しました。")
             })
             .catch((err) => {
                 switch (err.status){
@@ -107,50 +98,61 @@ class RegisterUser extends React.Component {
                         this.openDialog("入力が不正です。");
                         break;
                     case 409:
-                        this.openDialog("ユーザーIDが重複しています。", "別のIDを入力して下さい。");
+                        this.openDialog("IDが重複しています。", "別のIDを入力して下さい。");
                         break;
                 }
             });
     }
 
+    onDrop(files) {
+        ApiClient.uploadCsvDevices(files[0])
+            .then((obj) => {
+                this.openDialog("端末登録が成功しました。")
+            })
+            .catch((err) => {
+                switch (err.status){
+                    case 400:
+                        this.openDialog("不正なファイルです。");
+                        break;
+                }
+            });
+    }
     render() {
         return (
             <div>
-                <Paper style={styles.paper} zDepth={2}>
-                    <h2 style={styles.headline}>ユーザー登録</h2>
+                <h2 style={styles.headline}>端末登録</h2>
 
+                <div>
+                    <TextField
+                        id={FORM_INPUT_ID.USER_ID}
+                        floatingLabelText="端末ID"
+                        hintText="WiFi Macアドレスを入力して下さい"
+                        errorText={this.state.errorText.id}
+                        onChange={this.onChangeForm}
+                    /><br />
+                    <TextField
+                        id={FORM_INPUT_ID.USER_NAME}
+                        floatingLabelText="端末名"
+                        hintText="端末名を入力して下さい"
+                        errorText={this.state.errorText.name}
+                        onChange={this.onChangeForm}
+                    />
+                </div>
+                <RaisedButton
+                    label="登録"
+                    onClick={this.submit}
+                    fullWidth={true}
+                    primary={true}
+                    style={styles.button} />
+
+                <Dropzone
+                    onDrop={this.onDrop}
+                    accept="text/csv,application/vnd.ms-excel" >
                     <div>
-                        <TextField
-                            id={FORM_INPUT_ID.USER_ID}
-                            floatingLabelText="ユーザーID"
-                            hintText="社員番号を入力して下さい"
-                            errorText={this.state.errorText.id}
-                            onChange={this.onChangeForm}
-                        /><br />
-                        <TextField
-                            id={FORM_INPUT_ID.USER_NAME}
-                            floatingLabelText="ユーザー名"
-                            hintText="名前を入力して下さい"
-                            errorText={this.state.errorText.name}
-                            onChange={this.onChangeForm}
-                        /><br />
-                        <TextField
-                            id={FORM_INPUT_ID.ADDRESS}
-                            floatingLabelText="アドレス"
-                            hintText="通知用のアドレスを入力して下さい"
-                            errorText={this.state.errorText.address}
-                            onChange={this.onChangeForm}
-                        />
+                        ファイルを指定またはドラッグ&ドロップ
+                        <p>形式: csv</p>
                     </div>
-                    <RaisedButton
-                        label="登録"
-                        onClick={this.submit}
-                        fullWidth={true}
-                        primary={true}
-                        style={styles.button} />
-                </Paper>
-
-
+                </Dropzone>
 
                 <Dialog
                     title={this.state.dialog.title}
@@ -171,7 +173,7 @@ class RegisterUser extends React.Component {
 }
 
 
-RegisterUser.propTypes = {
+RegisterDevice.propTypes = {
 };
 
 function mapStateToProps(state) {
@@ -187,4 +189,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(RegisterUser);
+)(RegisterDevice);

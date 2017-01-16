@@ -1,7 +1,7 @@
 import React from "react";
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table";
 import dateFormat from "dateformat";
-import Constant from "../../constants.js";
+import Constant from "../../Constants.js";
 
 const styles = {
     block: {

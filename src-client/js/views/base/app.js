@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import Theme from '../theme.js';
+import Theme from '../Theme.js';
 
 class AppViewBase extends React.Component {
 

@@ -1,14 +1,8 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Link, hashHistory } from 'react-router'
-
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-
-import Header from '../components/header.js'
+import React from "react";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {Link, hashHistory} from "react-router";
+import RaisedButton from "material-ui/RaisedButton";
 
 const styles = {
     headline: {
@@ -27,7 +21,7 @@ const BUTTON_ID = {
 };
 
 class AdminTop extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             isOpenLoginDialog: false,
@@ -37,20 +31,20 @@ class AdminTop extends React.Component {
         this.closeDialog = this.closeDialog.bind(this);
     };
 
-    openDialog(){
+    openDialog() {
         this.setState({isOpenLoginDialog: true});
     };
 
-    closeDialog(){
+    closeDialog() {
         this.setState({isOpenLoginDialog: false});
     };
 
 
-    submitLoginRequest(){
+    submitLoginRequest() {
         this.setState({isOpenLoginDialog: false});
     }
 
-    logout(){
+    logout() {
         localStorage.removeItem('torica_token');
         hashHistory.push('/')
     }
@@ -60,7 +54,7 @@ class AdminTop extends React.Component {
         return (
             <div>
                 <div style={{textAlign: "center"}}>
-                    <img src={"/torica/img/torica-admin.png"} />
+                    <img src={"/torica/img/torica-admin.png"}/>
                     <h1>Torica Administrator Console</h1>
                     Toriaezu tanmatsu no kashidashi Rireki wo nokoshite okouCa.
                 </div>
@@ -80,24 +74,21 @@ class AdminTop extends React.Component {
                         onClick={this.handleClick}
                         fullWidth={true}
                         primary={true}
-                        style={styles.button} />
+                        style={styles.button}/>
                 </Link>
             </div>
         );
     }
 }
 
-AdminTop.propTypes = {
-};
+AdminTop.propTypes = {};
 
 function mapStateToProps(state) {
-    return {
-    };
+    return {};
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-    };
+    return {};
 }
 
 export default connect(

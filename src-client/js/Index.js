@@ -9,7 +9,7 @@ injectTapEventPlugin();
 
 import thunk from 'redux-thunk';
 
-import Routing from './routing.js';
+import Routing from './Routing.js';
 
 import authReducer from './reducers/auth-reducer.js'
 

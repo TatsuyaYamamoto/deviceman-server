@@ -3,22 +3,21 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 import dateFormat from 'dateformat';
 
-import ApiClient from '../Apiclient.js';
-import Constant from '../constants.js';
+import ApiClient from '../../Apiclient.js';
+import Constant from '../../Constants.js';
 
-
-export default class CheckoutList extends React.Component {
+export default class CheckoutLogList extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            checkouts: []
+            logs: []
         }
     }
 
     componentDidMount(){
-        ApiClient.getCheckout()
+        ApiClient.getCheckoutLog()
             .then((body) => {
-                this.setState({checkouts: body.checkouts})
+                this.setState({logs: body.logs})
             })
             .catch((err) => {
             });
@@ -33,18 +32,18 @@ export default class CheckoutList extends React.Component {
                     <TableHeaderColumn>借出ユーザー名</TableHeaderColumn>
                     <TableHeaderColumn>端末名</TableHeaderColumn>
                     <TableHeaderColumn>借出日</TableHeaderColumn>
-                    <TableHeaderColumn>返却予定日</TableHeaderColumn>
+                    <TableHeaderColumn>返却日</TableHeaderColumn>
                 </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
-                    {this.state.checkouts.map((checkout)=>{
+                    {this.state.logs.map((log)=>{
                         return (
-                            <TableRow key={checkout.id}>
-                                <TableRowColumn>{checkout.id}</TableRowColumn>
-                                <TableRowColumn>{checkout.user.name}</TableRowColumn>
-                                <TableRowColumn>{checkout.device.name}</TableRowColumn>
-                                <TableRowColumn>{dateFormat(checkout.checkOutTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
-                                <TableRowColumn>{dateFormat(checkout.dueReturnTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
+                            <TableRow key={log.id}>
+                                <TableRowColumn>{log.id}</TableRowColumn>
+                                <TableRowColumn>{log.user.name}</TableRowColumn>
+                                <TableRowColumn>{log.device.name}</TableRowColumn>
+                                <TableRowColumn>{dateFormat(log.checkOutTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
+                                <TableRowColumn>{dateFormat(log.dueReturnTime, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
                             </TableRow>
 
                             )

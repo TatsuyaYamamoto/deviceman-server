@@ -7,7 +7,7 @@ import IconButton from "material-ui/IconButton";
 import SearchIcon from "material-ui/svg-icons/action/search";
 import UserList from "../components/table/UserListTable.js";
 import DeviceList from "../components/table/DeviceTable.js";
-import CheckoutList from "../components/checkout-list.js";
+import CheckoutList from "../components/table/CheckoutLogTable.js";
 import ApiClient from "../Apiclient.js";
 
 const KEYCODE_ENTER = 13;

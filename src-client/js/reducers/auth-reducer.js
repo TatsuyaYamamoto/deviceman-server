@@ -8,9 +8,7 @@ export const Type = {
 };
 
 export default function authReducer(state = initialState, action) {
-    console.trace("authReducer()", state, action);
-
-    switch(action.type) {
+    switch (action.type) {
         case Type.LOGIN:
             return Object.assign(state, {token: "tmp"});
 

@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     debug: true,
     entry: {
-        bundle: path.join(__dirname, 'src-client/js/index.js')
+        bundle: path.join(__dirname, 'src-client/js/Index.js')
     },
     output: {
         path: path.join(__dirname, 'src/main/resources/static/'),

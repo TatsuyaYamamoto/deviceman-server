@@ -5,9 +5,9 @@ import {Link, hashHistory} from "react-router";
 import CircularProgress from "material-ui/CircularProgress";
 import RaisedButton from "material-ui/RaisedButton";
 import ApiClient from "../Apiclient.js";
-import LoginDialog from "../components/login-dialog.js";
-import CreateUserDialog from "../components/createuser-dialog.js";
-import AlertDialog from "../components/alert-dialog.js";
+import LoginDialog from "../components/dialog/LoginDialog.js";
+import CreateUserDialog from "../components/dialog/CreateuserDialog.js";
+import AlertDialog from "../components/dialog/AlertDialog.js";
 
 const styles = {
     headline: {
@@ -198,9 +198,8 @@ class Top extends React.Component {
 
                 <div style={{textAlign: "center"}}>
                     <img src={"/torica/img/torica.png"}/>
-                    <h1>Torica!</h1>
+                    <h1>Torica</h1>
                     Toriaezu tanmatsu no kashidashi Rireki wo nokoshite okouCa.
-
                 </div>
 
                 <LoginDialog
