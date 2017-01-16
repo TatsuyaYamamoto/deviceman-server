@@ -1,9 +1,9 @@
 package jp.co.fujixerox.nbd.controller;
 
-import jp.co.fujixerox.nbd.domain.model.CheckOut;
-import jp.co.fujixerox.nbd.domain.model.Log;
-import jp.co.fujixerox.nbd.domain.repository.CheckOutRepository;
-import jp.co.fujixerox.nbd.domain.repository.LogRepository;
+import jp.co.fujixerox.nbd.persistence.entity.CheckOutEntity;
+import jp.co.fujixerox.nbd.persistence.entity.CheckOutLogEntity;
+import jp.co.fujixerox.nbd.persistence.repository.CheckOutRepository;
+import jp.co.fujixerox.nbd.persistence.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,7 +36,7 @@ public class CheckoutRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getCurrentCheckout(){
-        List<CheckOut> checkouts = coRepo.findAll();
+        List<CheckOutEntity> checkouts = coRepo.findAll();
 
         Map<String, List> response = new HashMap<>();
         response.put("checkouts", checkouts);
@@ -55,10 +55,10 @@ public class CheckoutRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getLog(){
-        List<Log> logs = logRepo.findAll();
+        List<CheckOutLogEntity> logEntities = logRepo.findAll();
 
         Map<String, List> response = new HashMap<>();
-        response.put("logs", logs);
+        response.put("logs", logEntities);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
