@@ -73,6 +73,6 @@ public class TokenRestController {
         }
 
         return ResponseEntity.ok().body(
-                String.format("{token:\"%s\"}", token));
+                String.format("{\"token\":\"%s\"}", token));
     }
 }
