@@ -2,11 +2,10 @@ import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Link, hashHistory} from "react-router";
-import CircularProgress from "material-ui/CircularProgress";
 import RaisedButton from "material-ui/RaisedButton";
 import ApiClient from "../Apiclient.js";
 import LoginDialog from "../components/dialog/LoginDialog.js";
-import CreateUserDialog from "../components/dialog/CreateuserDialog.js";
+import CreateUserDialog from "../components/dialog/CreateUserDialog.js";
 import AlertDialog from "../components/dialog/AlertDialog.js";
 import TokenService from "../service/TokenService.js";
 
@@ -45,12 +44,7 @@ const initialState = {
         isOpen: false
     },
     createUserDialog: {
-        isOpen: false,
-        error: {
-            id: "",
-            name: "",
-            address: "",
-        }
+        isOpen: false
     },
     successDialog: {
         isOpen: false
@@ -78,7 +72,6 @@ class Top extends React.Component {
 
         ApiClient.getToken(userId, password)
             .then((body) => {
-                console.log(body)
                 TokenService.set(body.token);
                 this.handleLoginDialog(false);
                 hashHistory.push('console');
@@ -91,69 +84,27 @@ class Top extends React.Component {
     /****************************
      * ユーザー作成ダイアログ
      */
-    openCreateUserDialog = ()=> {
-        const state = this.state.createUserDialog;
-        state.isOpen = true;
-        state.error = {};
+    handleCreateUserDialog = (isOpen)=> {
+        const currentState = this.state.createUserDialog;
+        currentState.isOpen = isOpen != null ? isOpen : !currentState.isOpen;
 
-        this.setState({createUserDialog: state});
-    }
+        this.setState({createUserDialog: currentState});
+    };
 
-    closeCreateUserDialog = ()=> {
-        const state = this.state.createUserDialog;
-        state.isOpen = false;
-
-        this.setState({createUserDialog: state});
-    }
-
-    openSuccessDialog = ()=> {
+    handleOpenSuccessDialog = (isOpen)=> {
         const successDialogState = this.state.successDialog;
-        successDialogState.isOpen = true;
+        successDialogState.isOpen = isOpen;
         this.setState({successDialog: successDialogState})
-    }
+    };
 
-    closeSuccessDialog = ()=> {
-        const successDialogState = this.state.successDialog;
-        successDialogState.isOpen = false;
-        this.setState({successDialog: successDialogState})
-    }
-
-    handleCreateUser = (userId, userName, address) => {
-        console.trace("Top#createUser()", userId, userName, address);
-
-        this.setState({isProgress: true});
-
+    handleCreateUser = (userId, userName, address, errorCallback) => {
         ApiClient.registerUser(userId, userName, address)
             .then((obj) => {
-                this.closeCreateUserDialog();
-                this.openSuccessDialog();
-                this.setState({isProgress: false})
+                this.handleCreateUserDialog(false);
+                this.handleOpenSuccessDialog(true);
             })
             .catch((response) => {
-                const state = this.state.createUserDialog;
-
-                switch (response.status) {
-                    case 400:
-                        const errors = response.body.errors;
-                        state.error = {};
-                        errors.forEach((error)=> {
-                            if (error.field == 'id') {
-                                state.error.id = error.message;
-                            }
-                            if (error.field == 'name') {
-                                state.error.name = error.message;
-                            }
-                            if (error.field == 'address') {
-                                state.error.address = error.message;
-                            }
-                        });
-                        break;
-                    case 409:
-                        state.error.id = "ユーザーIDが重複しています。別のIDを入力して下さい。";
-                        break;
-                }
-
-                this.setState({createUserDialog: state, isProgress: false});
+                errorCallback(response.status);
             });
     };
 
@@ -161,8 +112,6 @@ class Top extends React.Component {
     render() {
         return (
             <div>
-                {this.state.isProgress && <CircularProgress style={styles.circularProgress}/>}
-
                 <div style={{textAlign: "center"}}>
                     <img src={"/torica/img/torica.png"}/>
                     <h1>Torica</h1>
@@ -176,13 +125,14 @@ class Top extends React.Component {
 
                 <CreateUserDialog
                     isOpen={this.state.createUserDialog.isOpen}
-                    errorText={this.state.createUserDialog.error}
-                    create={this.handleCreateUser}
-                    onClose={this.closeCreateUserDialog}/>
+                    handleCreate={this.handleCreateUser}
+                    handleClose={this.handleCreateUserDialog}/>
 
                 <AlertDialog
                     isOpen={this.state.successDialog.isOpen}
-                    onRequestClose={this.closeSuccessDialog}
+                    onRequestClose={()=> {
+                        this.handleOpenSuccessDialog(false);
+                    }}
                     title={RESOURCES.SUCCESS_CREATE_USER_DIALOG.TITLE}
                     description={RESOURCES.SUCCESS_CREATE_USER_DIALOG.DESCRIPTION}/>
 
@@ -199,7 +149,9 @@ class Top extends React.Component {
                 <RaisedButton
                     id={BUTTON_ID.TO_REGISTER_USER_VIEW}
                     label="ユーザー新規登録"
-                    onClick={this.openCreateUserDialog}
+                    onClick={()=> {
+                        this.handleCreateUserDialog(true);
+                    }}
                     fullWidth={true}
                     primary={true}
                     style={styles.button}/>
