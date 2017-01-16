@@ -91,4 +91,16 @@ public class UserService {
         repository.save(newUserEntity);
         logger.traceExit("success to save a new user, {}", newUserEntity);
     }
+
+    /**
+     * パスワード検証
+     *
+     * @param id
+     * @param password
+     * @return
+     */
+    public boolean verifyPassword(String id, String password) {
+        UserEntity user = repository.findOne(id);
+        return user != null && passwordEncoder.matches(password, user.getPassword());
+    }
 }
