@@ -74,9 +74,9 @@ public class CheckOutEntity implements Serializable {
      */
     @JoinColumn(name = "DEVICE_ID", insertable = false, updatable = false)
     @ManyToOne
-    private DeviceEntity deviceEntity;
+    private DeviceEntity device;
 
     @JoinColumn(name = "USER_ID", insertable = false, updatable = false)
     @ManyToOne
-    private UserEntity userEntity;
+    private UserEntity user;
 }
