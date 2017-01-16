@@ -8,6 +8,7 @@ import ApiClient from "../Apiclient.js";
 import LoginDialog from "../components/dialog/LoginDialog.js";
 import CreateUserDialog from "../components/dialog/CreateuserDialog.js";
 import AlertDialog from "../components/dialog/AlertDialog.js";
+import TokenService from "../service/TokenService.js";
 
 const styles = {
     headline: {
@@ -37,15 +38,11 @@ const RESOURCES = {
         TITLE: "ユーザー登録が成功しました",
         DESCRIPTION: "入力されたアドレスにユーザー情報を送信しました。登録内容に間違いがないかご確認下さい（・８・）"
     }
-}
+};
 
 const initialState = {
     loginDialog: {
-        isOpen: false,
-        error: {
-            id: "",
-            password: ""
-        }
+        isOpen: false
     },
     createUserDialog: {
         isOpen: false,
@@ -65,66 +62,36 @@ class Top extends React.Component {
     constructor(props) {
         super(props);
         this.state = initialState;
-
-        this.handleLogin = this.handleLogin.bind(this);
-        this.openLoginDialog = this.openLoginDialog.bind(this);
-        this.closeLoginDialog = this.closeLoginDialog.bind(this);
-
-        this.handleCreateUser = this.handleCreateUser.bind(this);
-        this.openCreateUserDialog = this.openCreateUserDialog.bind(this);
-        this.openSuccessDialog = this.openSuccessDialog.bind(this);
-        this.closeSuccessDialog = this.closeSuccessDialog.bind(this);
-        this.closeCreateUserDialog = this.closeCreateUserDialog.bind(this);
     };
 
     /****************************
      * ログインダイアログ
      */
-    openLoginDialog() {
-        const state = this.state.loginDialog;
-        state.isOpen = true;
-        state.error = {};
+    handleLoginDialog = (isOpen)=> {
+        const currentState = this.state.loginDialog;
+        currentState.isOpen = isOpen != null ? isOpen : !currentState.isOpen;
 
-        this.setState({loginDialog: state});
-    }
+        this.setState({loginDialog: currentState});
+    };
 
-    closeLoginDialog() {
-        const state = this.state.loginDialog;
-        state.isOpen = false;
+    handleLogin = (userId, password, errorCallback)=> {
 
-        this.setState({loginDialog: state});
-    }
-
-    handleLogin(userId, password) {
-        console.trace("Top#login()", userId, password);
-
-        if (userId === '1234' && password === '') {
-            this.closeLoginDialog();
-
-            localStorage.setItem('torica_token', 'tmp');
-            hashHistory.push('console')
-        } else if (userId === '1234' && password !== '') {
-            const state = this.state.loginDialog;
-            state.error.password = "パスワード異なっています。";
-
-            this.setState({loginDialog: state});
-        } else if (userId === '1111') {
-            const state = this.state.loginDialog;
-            state.error.id = "入力されたIDには管理権限がありません。";
-
-            this.setState({loginDialog: state});
-        } else {
-            const state = this.state.loginDialog;
-            state.error.id = "存在しないIDです。";
-
-            this.setState({loginDialog: state});
-        }
-    }
+        ApiClient.getToken(userId, password)
+            .then((body) => {
+                console.log(body)
+                TokenService.set(body.token);
+                this.handleLoginDialog(false);
+                hashHistory.push('console');
+            })
+            .catch((err) => {
+                errorCallback(err.status);
+            });
+    };
 
     /****************************
      * ユーザー作成ダイアログ
      */
-    openCreateUserDialog() {
+    openCreateUserDialog = ()=> {
         const state = this.state.createUserDialog;
         state.isOpen = true;
         state.error = {};
@@ -132,26 +99,26 @@ class Top extends React.Component {
         this.setState({createUserDialog: state});
     }
 
-    closeCreateUserDialog() {
+    closeCreateUserDialog = ()=> {
         const state = this.state.createUserDialog;
         state.isOpen = false;
 
         this.setState({createUserDialog: state});
     }
 
-    openSuccessDialog() {
+    openSuccessDialog = ()=> {
         const successDialogState = this.state.successDialog;
         successDialogState.isOpen = true;
         this.setState({successDialog: successDialogState})
     }
 
-    closeSuccessDialog() {
+    closeSuccessDialog = ()=> {
         const successDialogState = this.state.successDialog;
         successDialogState.isOpen = false;
         this.setState({successDialog: successDialogState})
     }
 
-    handleCreateUser(userId, userName, address) {
+    handleCreateUser = (userId, userName, address) => {
         console.trace("Top#createUser()", userId, userName, address);
 
         this.setState({isProgress: true});
@@ -188,7 +155,7 @@ class Top extends React.Component {
 
                 this.setState({createUserDialog: state, isProgress: false});
             });
-    }
+    };
 
 
     render() {
@@ -204,9 +171,8 @@ class Top extends React.Component {
 
                 <LoginDialog
                     isOpen={this.state.loginDialog.isOpen}
-                    errorText={this.state.loginDialog.error}
-                    login={this.handleLogin}
-                    onClose={this.closeLoginDialog}/>
+                    handleLogin={this.handleLogin}
+                    handleOpen={this.handleLoginDialog}/>
 
                 <CreateUserDialog
                     isOpen={this.state.createUserDialog.isOpen}
@@ -223,7 +189,9 @@ class Top extends React.Component {
                 <RaisedButton
                     id={BUTTON_ID.TO_MANAGE_VIEW}
                     label="管理画面"
-                    onClick={this.openLoginDialog}
+                    onClick={()=> {
+                        this.handleLoginDialog(true);
+                    }}
                     fullWidth={true}
                     primary={true}
                     style={styles.button}/>

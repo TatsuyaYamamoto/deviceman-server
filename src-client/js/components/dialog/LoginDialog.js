@@ -1,8 +1,7 @@
-import React from 'react';
-
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
+import React from "react";
+import Dialog from "material-ui/Dialog";
+import TextField from "material-ui/TextField";
+import FlatButton from "material-ui/FlatButton";
 
 const FORM_INPUT_ID = {
     USER_ID: "userId",
@@ -11,32 +10,33 @@ const FORM_INPUT_ID = {
 
 const styles = {
     dialog: {
-        textAlign:'center'
+        textAlign: 'center'
     },
     errorMessage: {
         color: 'red'
     }
 };
 
+const initState = {
+    formValue: {
+        id: "",
+        password: ""
+    },
+    errorText: ''
+};
+
+const ERROR_MESSAGE = "IDまたはパスワードが正しくありません。";
+
 export default class LoginDialog extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {
-            isOpenSuccessDialog: false,
-            formValue: {
-                id: "",
-                password: ""
-            }
-        };
+        this.state = initState;
+    };
 
-        this.onChangeForm = this.onChangeForm.bind(this);
-        this.login = this.login.bind(this);
-    }
-
-    onChangeForm(e){
+    onChangeForm = (e)=> {
         const formValue = this.state.formValue;
 
-        switch(e.currentTarget.id){
+        switch (e.currentTarget.id) {
             case FORM_INPUT_ID.USER_ID:
                 formValue.id = e.target.value;
                 break;
@@ -45,51 +45,55 @@ export default class LoginDialog extends React.Component {
                 break;
         }
         this.setState({formValue: formValue});
-    }
+    };
 
-    login(){
+    handleLogin = () => {
         const userId = this.state.formValue.id;
         const password = this.state.formValue.password;
 
-        this.props.login(userId, password);
-    }
+        this.props.handleLogin(userId, password, (errorStatus) => {
+            this.setState({errorText: ERROR_MESSAGE});
+        });
+    };
 
-    render(){
+    render() {
         return (
             <Dialog
                 title="管理画面"
                 modal={false}
                 open={this.props.isOpen}
-                onRequestClose={this.props.onClose}
+                onRequestClose={()=>{
+                    this.setState(initState);
+                    this.props.handleOpen(false)
+                }}
                 style={styles.dialog}
                 actions={[
                     <FlatButton
                         label="Cancel"
                         primary={true}
-                        onTouchTap={this.props.onClose}
+                        onTouchTap={()=> {
+                            this.setState(initState);
+                            this.props.handleOpen(false)
+                        }}
                     />,
                     <FlatButton
                         label="Login"
                         primary={true}
                         keyboardFocused={true}
-                        onTouchTap={this.login}
-                        onClick={this.login}
+                        onTouchTap={this.handleLogin}
                     />,
                 ]}>
                 <div>
                     <TextField
                         id={FORM_INPUT_ID.USER_ID}
                         floatingLabelText="ユーザーID"
-                        onChange={this.onChangeForm}
-                        errorText={this.props.errorText.id}
-                    /><br />
+                        onChange={this.onChangeForm}/><br />
                     <TextField
                         id={FORM_INPUT_ID.PASSWORD}
                         type="password"
                         floatingLabelText="パスワード"
                         onChange={this.onChangeForm}
-                        errorText={this.props.errorText.password}
-                    />
+                        errorText={this.state.errorText}/>
                 </div>
             </Dialog>
         )
@@ -98,7 +102,6 @@ export default class LoginDialog extends React.Component {
 
 LoginDialog.propTypes = {
     isOpen: React.PropTypes.bool.isRequired,
-    login: React.PropTypes.func.isRequired,
-    errorText: React.PropTypes.object.isRequired,
-    onClose: React.PropTypes.func.isRequired
+    handleLogin: React.PropTypes.func.isRequired,
+    handleOpen: React.PropTypes.func.isRequired
 };

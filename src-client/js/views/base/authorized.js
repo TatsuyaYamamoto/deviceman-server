@@ -1,21 +1,22 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { hashHistory } from 'react-router'
+import React from "react";
+import {connect} from "react-redux";
+import {hashHistory} from "react-router";
+import TokenService from "../../service/TokenService.js";
 
 class AuthorizedViewBase extends React.Component {
 
-    componentWillMount(){
-        this.checkLoggingin();
-    }
-    componentWillUpdate(){
+    componentWillMount() {
         this.checkLoggingin();
     }
 
-    checkLoggingin(){
+    componentWillUpdate() {
+        this.checkLoggingin();
+    }
+
+    checkLoggingin() {
         console.debug("check logging in.");
-        const token = localStorage.getItem('torica_token');
 
-        if(token == null || token != 'tmp'){
+        if (TokenService.get() == null) {
             localStorage.removeItem('torica_token');
             hashHistory.push('/')
         }
@@ -23,21 +24,19 @@ class AuthorizedViewBase extends React.Component {
 
     render() {
         return (
-        <div>
-            { this.props.children }
-        </div>
+            <div>
+                { this.props.children }
+            </div>
         );
     }
 }
 
 function mapStateToProps(state) {
-    return {
-    };
+    return {};
 }
 
 function mapDispatchToProps(dispatch) {
-    return {
-    };
+    return {};
 }
 
 export default connect(

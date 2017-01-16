@@ -3,6 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Link, hashHistory} from "react-router";
 import RaisedButton from "material-ui/RaisedButton";
+import TokenService from '../service/TokenService.js';
 
 const styles = {
     headline: {
@@ -23,32 +24,13 @@ const BUTTON_ID = {
 class AdminTop extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isOpenLoginDialog: false,
-        };
-
-        this.openDialog = this.openDialog.bind(this);
-        this.closeDialog = this.closeDialog.bind(this);
+        this.state = {};
     };
 
-    openDialog() {
-        this.setState({isOpenLoginDialog: true});
-    };
-
-    closeDialog() {
-        this.setState({isOpenLoginDialog: false});
-    };
-
-
-    submitLoginRequest() {
-        this.setState({isOpenLoginDialog: false});
-    }
-
-    logout() {
-        localStorage.removeItem('torica_token');
+    handleLogout = ()=> {
+        TokenService.remove();
         hashHistory.push('/')
-    }
-
+    };
 
     render() {
         return (
@@ -63,9 +45,9 @@ class AdminTop extends React.Component {
                     id={BUTTON_ID.LOGOUT}
                     label="ログアウト"
                     fullWidth={true}
-                    primary={true}
+                    secondary={true}
                     style={styles.button}
-                    onClick={this.logout}/>
+                    onClick={this.handleLogout}/>
 
                 <Link to="/console/devices/new">
                     <RaisedButton

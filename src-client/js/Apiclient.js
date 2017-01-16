@@ -1,6 +1,24 @@
 import request from "superagent";
 
 module.exports = {
+    getToken: function (id, password) {
+        return new Promise((resolve, reject) => {
+            request
+                .post("/torica/api/token/")
+                .send({
+                    id: id,
+                    password: password
+                })
+                .end(function (err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res.body);
+                    }
+                })
+        })
+    },
+
     getCheckout: function () {
         return new Promise((resolve, reject) => {
             request
@@ -96,24 +114,6 @@ module.exports = {
                                 reject(err);
                             } else {
                                 resolve(res.body);
-                            }
-                        }
-                    );
-            }
-        );
-    },
-    uploadCsvDevices: function (formData) {
-        return new Promise(
-            (resolve, reject) => {
-                request
-                    .post("/torica/api/devices/upload.csv")
-                    .attach('csv_file', formData)
-                    .end(
-                        (err, res) => {
-                            if (err) {
-                                reject(err);
-                            } else {
-                                resolve();
                             }
                         }
                     );
