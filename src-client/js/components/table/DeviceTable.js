@@ -2,6 +2,7 @@ import React from "react";
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table";
 import dateFormat from "dateformat";
 import Constant from "../../Constants.js";
+import DeviceDetailDialog from "../../components/dialog/DeviceDetailDialog.js";
 
 const styles = {
     block: {
@@ -13,33 +14,53 @@ const styles = {
 };
 
 export default class DeviceList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            deviceDetailDialog: {
+                isOpen: false,
+                device: {}
+            }
+        };
+    }
+
+    handleOpenDeviceDetailDialog = (isOpen, rowIndex, columnIndex) => {
+        const dialogState = this.state.deviceDetailDialog;
+        dialogState.isOpen = isOpen;
+        dialogState.device = this.props.devices[rowIndex];
+
+        this.setState({deviceDetailDialog: dialogState});
+    };
+
     render() {
         return (
-
             <div>
-                <Table>
+                <DeviceDetailDialog
+                    isOpen={this.state.deviceDetailDialog.isOpen}
+                    handleOpen={this.handleOpenDeviceDetailDialog}
+                    device={this.state.deviceDetailDialog.device}/>
+                <Table onCellClick={(rowIndex, columnIndex)=> {
+                    this.handleOpenDeviceDetailDialog(true, rowIndex, columnIndex)
+                }}>
                     <TableHeader displaySelectAll={false}>
                         <TableRow>
-                            <TableHeaderColumn>端末ID</TableHeaderColumn>
+                            <TableHeaderColumn>端末ID(IMEI)</TableHeaderColumn>
+                            <TableHeaderColumn>MACアドレス</TableHeaderColumn>
                             <TableHeaderColumn>端末名</TableHeaderColumn>
                             <TableHeaderColumn>登録日</TableHeaderColumn>
-                            <TableHeaderColumn>QRコード</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
-                    <TableBody displayRowCheckbox={false}>
+                    <TableBody
+                        showRowHover={true}
+                        displayRowCheckbox={false}>
                         {this.props.devices.map((device)=> {
-                            var qrURL = `http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=${device.id}`;
-
                             return (
                                 <TableRow key={device.id}>
                                     <TableRowColumn>{device.id}</TableRowColumn>
+                                    <TableRowColumn>{device.macAddress}</TableRowColumn>
                                     <TableRowColumn>{device.name}</TableRowColumn>
-                                    <TableRowColumn>{dateFormat(device.created, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
                                     <TableRowColumn>
-                                        <a href={qrURL}>
-                                            <img src={qrURL}></img>
-                                        </a>
-                                    </TableRowColumn>
+                                        {dateFormat(device.created, Constant.DATEFORMAT_TEMPLATE)}</TableRowColumn>
                                 </TableRow>
                             )
                         })}

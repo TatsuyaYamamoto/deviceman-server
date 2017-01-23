@@ -7,7 +7,7 @@ import IconButton from "material-ui/IconButton";
 import SearchIcon from "material-ui/svg-icons/action/search";
 import UserList from "../components/table/UserListTable.js";
 import DeviceList from "../components/table/DeviceTable.js";
-import CheckoutList from "../components/table/CheckoutLogTable.js";
+import CheckoutTable from "../components/table/CheckoutTable.js";
 import ApiClient from "../Apiclient.js";
 
 const KEYCODE_ENTER = 13;
@@ -104,27 +104,29 @@ class RegisteredList extends React.Component {
 
     render() {
         return (
-            <Tabs
-                value={this.state.tab}
-                onChange={this.handleChangeTab}>
-                <Tab label="ユーザーリスト" value={TABS.USER}>
-                    <div>
-                        {this.getSearchComponent()}
-                        <UserList users={this.state.users}/>
-                    </div>
-                </Tab>
-                <Tab label="端末リスト" value={TABS.DEVICE}>
-                    <div>
-                        {this.getSearchComponent()}
-                        <DeviceList devices={this.state.devices}/>
-                    </div>
-                </Tab>
-                <Tab label="借り出し中端末リスト" value={TABS.CHECKOUT}>
-                    <div>
-                        <CheckoutList />
-                    </div>
-                </Tab>
-            </Tabs>
+            <div>
+                <Tabs
+                    value={this.state.tab}
+                    onChange={this.handleChangeTab}>
+                    <Tab label="ユーザーリスト" value={TABS.USER}>
+                        <div>
+                            {this.getSearchComponent()}
+                            <UserList users={this.state.users}/>
+                        </div>
+                    </Tab>
+                    <Tab label="端末リスト" value={TABS.DEVICE}>
+                        <div>
+                            {this.getSearchComponent()}
+                            <DeviceList devices={this.state.devices}/>
+                        </div>
+                    </Tab>
+                    <Tab label="借り出し中端末リスト" value={TABS.CHECKOUT}>
+                        <div>
+                            <CheckoutTable checkouts={this.state.checkouts}/>
+                        </div>
+                    </Tab>
+                </Tabs>
+            </div>
         );
     }
 }

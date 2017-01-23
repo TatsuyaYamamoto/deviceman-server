@@ -4,7 +4,7 @@ import dateFormat from "dateformat";
 import Constant from "../../Constants.js";
 
 
-export default class CheckoutList extends React.Component {
+export default class CheckoutTable extends React.Component {
     render() {
         return (
             <Table>
@@ -38,6 +38,6 @@ export default class CheckoutList extends React.Component {
         )
     }
 }
-CheckoutList.propTypes = {
+CheckoutTable.propTypes = {
     checkouts: React.PropTypes.array.isRequired
 };
