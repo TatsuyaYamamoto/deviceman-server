@@ -1,7 +1,7 @@
 package jp.co.fujixerox.nbd.controller;
 
 import jp.co.fujixerox.nbd.ApplicationException;
-import jp.co.fujixerox.nbd.domain.model.User;
+import jp.co.fujixerox.nbd.persistence.entity.UserEntity;
 import jp.co.fujixerox.nbd.service.UserService;
 import jp.co.fujixerox.nbd.service.notification.NotificationService;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ public class MessagingReceiver {
         logger.entry(message);
         logger.info("received new message. {}", message.getPayload());
 
-        User newUser = userService.getById(message.getPayload());
+        UserEntity newUser = userService.getById(message.getPayload());
 
         if(newUser == null){
             logger.error("received new user's id is not existed. fail messageing.");

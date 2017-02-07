@@ -1,4 +1,4 @@
-package jp.co.fujixerox.nbd.domain.service.notification;
+package jp.co.fujixerox.nbd.service.notification;
 
 import org.junit.Test;
 
