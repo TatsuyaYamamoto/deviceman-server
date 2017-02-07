@@ -34,6 +34,8 @@ import java.sql.DriverManager;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class SstTestBase {
+    private static final String TEST_DATABASE_NAME = "deviceman_db";
+
     @Getter
     private TestRestTemplate restTemplate;
 
@@ -62,7 +64,6 @@ public abstract class SstTestBase {
                 dataSourceProperties.getUrl(),
                 dataSourceProperties.getUsername(),
                 dataSourceProperties.getPassword(),
-                dataSourceProperties.getSchema(),
                 resourceLoader.getResource("classpath:" + "/dataset.xls").getFile()
         );
     }
@@ -72,7 +73,6 @@ public abstract class SstTestBase {
      * @param url
      * @param userName
      * @param password
-     * @param schema
      * @param dataset
      * @throws Exception
      */
@@ -80,7 +80,6 @@ public abstract class SstTestBase {
             String url,
             String userName,
             String password,
-            String schema,
             File dataset) throws Exception {
 
         Connection connection = null;
@@ -88,7 +87,7 @@ public abstract class SstTestBase {
         try {
             connection = DriverManager.getConnection(url, userName, password);
 
-            databaseConnection = new DatabaseConnection(connection, schema) {
+            databaseConnection = new DatabaseConnection(connection, TEST_DATABASE_NAME) {
                 @Override
                 public DatabaseConfig getConfig() {
                     DatabaseConfig config = super.getConfig();

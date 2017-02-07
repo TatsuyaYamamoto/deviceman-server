@@ -10,7 +10,6 @@ spring:
     dbcp:
       test-while-idle: true
       validation-query: SELECT 1
-    schema: deviceman_db
   jpa:
     database: mysql
     show-sql: true
