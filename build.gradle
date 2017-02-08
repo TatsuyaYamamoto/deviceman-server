@@ -1,21 +1,14 @@
 plugins {
     id 'org.springframework.boot' version '1.5.1.RELEASE'
+    id 'application'
+    id 'war'
 }
 
-//apply plugin: 'war'
-
 group 'jp.co.fujixerox.nbd'
+version '1.0'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
-
-//war {
-//    baseName = 'torica'
-//}
-
-jar {
-    baseName = 'torica'
-}
 
 repositories {
     mavenCentral()
